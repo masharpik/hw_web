@@ -130,6 +130,9 @@ nav .avatar, .logo {
     color:antiquewhite;
     margin-bottom: 0;
 }
+.user-data {
+    display: flex;
+}
 .authorization > a.l {
     margin: auto 5px;
 }

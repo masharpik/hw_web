@@ -20,7 +20,7 @@
     object-fit: cover;
 }
 
-.avatar {
+body .avatar {
     margin: 18px 0 18px 22px;
 }
 

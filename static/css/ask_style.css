@@ -1,0 +1,11 @@
+textarea {
+    width: 100%;
+}
+
+div.title, div.text, div.tags, div.ask {
+    margin: 15px auto 15px auto;
+}
+
+textarea#form_tags {
+    border: 1px solid red;
+}

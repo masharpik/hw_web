@@ -9,7 +9,8 @@
 
     <link href="../static/css/base_style.css" rel="stylesheet">
     <link href="../static/css/question_style.css" rel="stylesheet">
-    <link href="../static/css/index_style.css" rel="stylesheet">
+    <link href="../static/css/answer_style.css" rel="stylesheet">
+    <link href="../static/css/input_form_style.css" rel="stylesheet">
 
   </head>
   <body>
@@ -44,6 +45,9 @@
         </div>
       </div>
     </div>
+
+
+
     </div>
   </nav>
 
@@ -54,10 +58,8 @@
   <div class="container">
     <div class="row">
 
-      <h1>New Questions</h1>
-
       <div class="col-8">
-        <div class="question">
+        <div class="question bborder">
           <div class="row">
             <div class="col-3">
               <div class="feedback fl">
@@ -70,13 +72,12 @@
               </div>
             </div>
             <div class="col-9">
-              <h2 class="question-title">Question 1</h2>
+              <h2 class="question-title">Question 4</h2>
 
               <div class="question-text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed harum sapiente laboriosam qui officia cumque error accusantium consectetur id blanditiis.
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia doloribus, perspiciatis repellendus voluptate voluptatum atque dicta. Sint nulla nobis aliquam! Itaque nemo deleniti dolorum, delectus voluptate quibusdam alias? Vitae, accusamus, ipsum dolor sit amet consectetur adipisicing elit. Eius repudiandae repellendus asperiores veniam? Doloremque reiciendis omnis veritatis officiis? Dolores temporibus, sint nostrum sed labore quam vitae quo numquam maiores omnis quae quas fugiat, veritatis impedit.
               </div>
 
-              <a class="count-answers" href="#">answer (3)</a>
               <span class="lmargin">Tags: </span>
               <div class="question-tags dinline">
                 <a class="question-tag" href="#">black-jack</a>
@@ -86,12 +87,12 @@
           </div>
         </div>
 
-        <div class="question">
+        <div class="answer">
           <div class="row">
             <div class="col-3">
               <div class="feedback fl">
                 <button class="swipe dblock"><img class="swipe-up" src="../static/img/like.png" alt=""/></button>
-                <p class="score">1</p>
+                <p class="score">5</p>
                 <button class="swipe dblock"><img class="swipe-up" src="../static/img/dislike.png" alt=""/></button>
               </div>
               <div class="avatar fl">
@@ -99,46 +100,42 @@
               </div>
             </div>
             <div class="col-9">
-              <h2 class="question-title">Question 2</h2>
-
-              <div class="question-text">
-                Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corrupti sint fugiat dolor deserunt eligendi harum sit iusto sunt consequuntur accusamus amet dicta cum at error, explicabo soluta pariatur neque aliquid?
+              <div class="answer-text">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, nobis. Consectetur aspernatur veniam dolorem minima? Porro sequi ratione consequuntur provident.
               </div>
 
-              <a class="count-answers" href="#">answer (3)</a>
-              <span class="lmargin">Tags: </span>
-              <div class="question-tags dinline">
-                <a class="question-tag" href="#">black-jack</a>
-                <a class="question-tag" href="#">bender</a>
+              <div class="form-check form-checkbox">
+                <input class="form-check-input" type="checkbox" value="" id="flex_check_1">
+                <label class="form-check-label with-checkbox" for="flex_check_1">
+                  Correct
+                </label>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="question">
+        <div class="answer">
           <div class="row">
             <div class="col-3">
               <div class="feedback fl">
                 <button class="swipe dblock"><img class="swipe-up" src="../static/img/like.png" alt=""/></button>
-                <p class="score">2</p>
-                <button class="swipe dblock"><img class="swipe-down" src="../static/img/dislike.png" alt=""/></button>
+                <p class="score">3</p>
+                <button class="swipe dblock"><img class="swipe-up" src="../static/img/dislike.png" alt=""/></button>
               </div>
               <div class="avatar fl">
                 <img src="../static/img/default_avatar.jpeg" alt=""/>
               </div>
             </div>
             <div class="col-9">
-              <h2 class="question-title">Question 3</h2>
-
-              <div class="question-text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet libero architecto quas dicta atque error dolor magni debitis dolores fuga esse commodi perferendis consequuntur in natus perspiciatis consectetur veniam voluptas, obcaecati et. Deleniti iure consequuntur inventore dolores, vitae porro atque.
+              <div class="answer-text">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime amet libero perspiciatis hic similique optio sapiente neque dolore ipsum! Fugiat rem iusto facilis corrupti dolorem, doloremque sed temporibus veniam reiciendis necessitatibus consequatur? Quos in nam beatae eveniet adipisci mollitia, asperiores dolorum iste vitae quas, atque culpa, iure blanditiis quae quasi!
               </div>
 
-              <a class="count-answers" href="#">answer (2)</a>
-              <span class="lmargin">Tags: </span>
-              <div class="question-tags dinline">
-                <a class="question-tag" href="#">black-jack</a>
-                <a class="question-tag" href="#">bender</a>
+              <div class="form-check form-checkbox">
+                <input class="form-check-input" type="checkbox" value="" id="flex_check_2">
+                <label class="form-check-label with-checkbox" for="flex_check_2">
+                  Correct
+                </label>
               </div>
             </div>
           </div>
@@ -155,6 +152,13 @@
             <a class="page-link" href="#">Next</a>
           </li>
         </ul>
+
+        <div class="bborder"></div>
+
+        <form class="enter-answer">
+          <textarea placeholder="Enter your answer here..." id="new_answer"></textarea>
+          <button class="dblock mleft mbottom btn btn-success">Answer</button>
+        </form>
 
       </div>
 

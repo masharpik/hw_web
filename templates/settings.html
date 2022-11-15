@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sticky Footer Navbar Template · Bootstrap v5.2</title>
+
+    <link href="../static/css/bootstrap.css" rel="stylesheet">
+
+    <link href="../static/css/base_style.css" rel="stylesheet">
+
+    <link href="../static/css/settings_style.css" rel="stylesheet">
+
+    <link href="../static/css/input_form_style.css" rel="stylesheet">
+
+  </head>
+  <body>
+
+<header>
+  <nav class="hcenter">
+    <div class="logo">
+      <a href="#"><img class="img" src="../static/img/logo.png" alt=""></a>
+    </div>
+
+    <div class="search">
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+
+    <div class="ui-zone rblock hcenter">
+      <div class="create">
+        <button class="btn btn-success">ASK!</button>
+      </div>
+      <div class="user-data">
+        <div class="avatar fl">
+          <img src="../static/img/default_avatar.jpeg" alt=""/>
+        </div>
+        <div class="fl">
+          <p class="nickname">Mr. Leshiy</p>
+          <div class="authorization">
+            <a class="r" href="#">settings</a>
+            <a class="l" href="#">log out</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    </div>
+  </nav>
+
+</header>
+
+<main class="flex-shrink-0">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-8">
+        <h1>Settings: Mr. Leshiy</h1>
+        <p class="error">Error: Sorry, this email address already registred!</p>
+        <form class="form" id="form_settings"></form>
+
+        <div class="nickname">
+          <div class="row">
+            <div class="col-3">
+              <label for="form_nickname" form="form_settings">Nickname</label>
+            </div>
+            <div class="col-9">
+              <textarea class="text" rows="1" maxlength="20" id="form_nickname" form="form_settings">Mr. Leshiy</textarea>
+            </div>
+          </div>
+        </div>
+        <div class="email">
+            <div class="row">
+                <div class="col-3">
+                    <label for="form_email" form="form_settings">Email</label>
+                </div>
+                <div class="col-9">
+                    <textarea class="text" rows="1" readonly maxlength="33" id="form_email" form="form_settings">muskul@gmail.com</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="password">
+            <div class="row">
+                <div class="col-3">
+                    <label for="form_password" form="form_settings">Password</label>
+                </div>
+                <div class="col-9">
+                    <textarea class="text" rows="1"  maxlength="25" id="form_password" form="form_settings">********</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="repeat_password">
+          <div class="row">
+            <div class="col-3">
+              <label for="form_repeat_password" form="form_settings">Password</label>
+            </div>
+            <div class="col-9">
+              <textarea class="text" rows="1"  maxlength="25" id="form_repeat_password" form="form_settings">********</textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="current-avatar">
+          <div class="row">
+            <div class="col-3">
+              <label for="form_avatar" form="form_settings">Avatar</label>
+            </div>
+            <div class="col-9">
+              <div class="avatar">
+                <img src="../static/img/default_avatar.jpeg" alt=""/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="change-avatar">
+          <div class="row">
+            <div class="col-3">
+              <label for="form_change_avatar" form="form_settings">Change avatar</label>
+            </div>
+            <div class="col-9">
+              <input type="file" accept="image/png, image/jpeg" id="form_change_avatar" form="form_settings">
+            </div>
+          </div>
+        </div>
+
+        <div class="save">
+            <div class="row">
+                <div class="col-3"></div>
+                <div class="col-9">
+                    <button class="btn btn-outline-success">Save</button>
+                </div>
+            </div>
+        </div>
+      </div>
+
+      <div class="col-4">
+        <div class="popular-zone">
+          <div class="tags">
+            <h2>Popular Tags</h2>
+            <a class="tag" id="tag-1" href="#">perl</a>
+            <a class="tag" id="tag-2" href="#">python</a>
+            <a class="tag" id="tag-3" href="#">TechnoPark</a>
+            <a class="tag" id="tag-4" href="#">MySQL</a>
+            <a class="tag" id="tag-5" href="#">django</a>
+            <a class="tag" id="tag-6" href="#">Mail.Ru</a>
+            <a class="tag" id="tag-7" href="#">Voloshin</a>
+            <a class="tag" id="tag-8" href="#">Firefox</a>
+          </div>
+          <div class="members">
+            <h2>Best Members</h2>
+            <a class="member" id="member-1" href="#">Mr. Freeman</a>
+            <a class="member" id="member-2" href="#">Dr. House</a>
+            <a class="member" id="member-3" href="#">Bender</a>
+            <a class="member" id="member-4" href="#">Queen Victoria</a>
+            <a class="member" id="member-5" href="#">V. Pupkin</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="bg-light">
+  <div class="container">
+    <span class="text-muted">Place sticky footer content here.</span>
+  </div>
+</footer>
+  </body>
+</html>

@@ -1,0 +1,22 @@
+textarea {
+    width: 50%;
+}
+
+div.nickname, div.email, div.password, div.repeat_password, div.current-avatar, div.change-avatar, div.save {
+    margin: 15px auto;
+}
+
+textarea#form_nickname {
+    border: 1px solid red;
+}
+
+.current-avatar .avatar {
+    width: 70px;
+    height: 70px;
+}
+
+.avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

@@ -1,0 +1,19 @@
+label {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    text-align: center;
+    padding: 2px;
+}
+
+textarea {
+    width: 100%;
+    resize: none;
+    border-radius: 5px;
+}
+
+p.error {
+    color:red;
+    font-size: 1.1em;
+    font-family: 'Courier New', Courier, monospace;
+    margin-left: 5px;
+}

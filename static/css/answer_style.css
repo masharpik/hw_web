@@ -13,10 +13,8 @@
     padding: 5px;
 }
 
-.mleft {
-    margin-left: 5px;
-}
-
-.mbottom {
-    margin-bottom: 10px;
+a.count-answers {
+    pointer-events: none;
+    cursor: default;
+    color: #999;
 }

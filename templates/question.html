@@ -1,199 +1,31 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sticky Footer Navbar Template · Bootstrap v5.2</title>
+{% extends "inc/base.html" %}
+{% load static %}
 
-    <link href="../static/css/bootstrap.css" rel="stylesheet">
+{% block links %}
 
-    <link href="../static/css/base_style.css" rel="stylesheet">
-    <link href="../static/css/question_style.css" rel="stylesheet">
-    <link href="../static/css/answer_style.css" rel="stylesheet">
-    <link href="../static/css/input_form_style.css" rel="stylesheet">
+<link href="{% static 'css/question_style.css' %}" rel="stylesheet">
+<link href="{% static 'css/answer_style.css' %}" rel="stylesheet">
+<link href="{% static 'css/input_form_style.css' %}" rel="stylesheet">
 
-  </head>
-  <body>
+{% endblock %}
 
-<header>
-  <nav class="hcenter">
-    <div class="logo">
-      <a href="#"><img class="img" src="../static/img/logo.png" alt=""></a>
-    </div>
+{% block content %}
 
-    <div class="search">
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
-
-    <div class="ui-zone rblock hcenter">
-      <div class="create">
-        <button class="btn btn-success">ASK!</button>
-      </div>
-      <div class="user-data">
-        <div class="avatar fl">
-          <img src="../static/img/default_avatar.jpeg" alt=""/>
-        </div>
-        <div class="fl">
-          <p class="nickname">Mr. Leshiy</p>
-          <div class="authorization">
-            <a class="r" href="#">settings</a>
-            <a class="l" href="#">log out</a>
-          </div>
-        </div>
-      </div>
-    </div>
+{% include 'inc/question_item.html' %}
 
 
+{% for answer in answers %}
+  {% include 'inc/answer_item.html' %}
+{% endfor %}
 
-    </div>
-  </nav>
 
-</header>
+{% include 'inc/paginator.html' %}
 
-<main class="flex-shrink-0">
+<div class="bborder"></div>
 
-  <div class="container">
-    <div class="row">
+<form class="enter-answer">
+  <textarea placeholder="Enter your answer here..." id="new_answer"></textarea>
+  <button class="dblock mleft mbottom btn btn-success">Answer</button>
+</form>
 
-      <div class="col-8">
-        <div class="question bborder">
-          <div class="row">
-            <div class="col-3">
-              <div class="feedback fl">
-                <button class="swipe dblock"><img class="swipe-up" src="../static/img/like.png" alt=""/></button>
-                <p class="score">0</p>
-                <button class="swipe dblock"><img class="swipe-up" src="../static/img/dislike.png" alt=""/></button>
-              </div>
-              <div class="avatar fl">
-                <img src="../static/img/default_avatar.jpeg" alt=""/>
-              </div>
-            </div>
-            <div class="col-9">
-              <h2 class="question-title">Question 4</h2>
-
-              <div class="question-text">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officia doloribus, perspiciatis repellendus voluptate voluptatum atque dicta. Sint nulla nobis aliquam! Itaque nemo deleniti dolorum, delectus voluptate quibusdam alias? Vitae, accusamus, ipsum dolor sit amet consectetur adipisicing elit. Eius repudiandae repellendus asperiores veniam? Doloremque reiciendis omnis veritatis officiis? Dolores temporibus, sint nostrum sed labore quam vitae quo numquam maiores omnis quae quas fugiat, veritatis impedit.
-              </div>
-
-              <span class="lmargin">Tags: </span>
-              <div class="question-tags dinline">
-                <a class="question-tag" href="#">black-jack</a>
-                <a class="question-tag" href="#">bender</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="answer">
-          <div class="row">
-            <div class="col-3">
-              <div class="feedback fl">
-                <button class="swipe dblock"><img class="swipe-up" src="../static/img/like.png" alt=""/></button>
-                <p class="score">5</p>
-                <button class="swipe dblock"><img class="swipe-up" src="../static/img/dislike.png" alt=""/></button>
-              </div>
-              <div class="avatar fl">
-                <img src="../static/img/default_avatar.jpeg" alt=""/>
-              </div>
-            </div>
-            <div class="col-9">
-              <div class="answer-text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime, nobis. Consectetur aspernatur veniam dolorem minima? Porro sequi ratione consequuntur provident.
-              </div>
-
-              <div class="form-check form-checkbox">
-                <input class="form-check-input" type="checkbox" value="" id="flex_check_1">
-                <label class="form-check-label with-checkbox" for="flex_check_1">
-                  Correct
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="answer">
-          <div class="row">
-            <div class="col-3">
-              <div class="feedback fl">
-                <button class="swipe dblock"><img class="swipe-up" src="../static/img/like.png" alt=""/></button>
-                <p class="score">3</p>
-                <button class="swipe dblock"><img class="swipe-up" src="../static/img/dislike.png" alt=""/></button>
-              </div>
-              <div class="avatar fl">
-                <img src="../static/img/default_avatar.jpeg" alt=""/>
-              </div>
-            </div>
-            <div class="col-9">
-              <div class="answer-text">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime amet libero perspiciatis hic similique optio sapiente neque dolore ipsum! Fugiat rem iusto facilis corrupti dolorem, doloremque sed temporibus veniam reiciendis necessitatibus consequatur? Quos in nam beatae eveniet adipisci mollitia, asperiores dolorum iste vitae quas, atque culpa, iure blanditiis quae quasi!
-              </div>
-
-              <div class="form-check form-checkbox">
-                <input class="form-check-input" type="checkbox" value="" id="flex_check_2">
-                <label class="form-check-label with-checkbox" for="flex_check_2">
-                  Correct
-                </label>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <ul class="pagination">
-          <li class="page-item disabled">
-            <span class="page-link">Previous</span>
-          </li>
-          <li class="page-item active" aria-current="page">
-            <span class="page-link">1</span>
-          </li>
-          <li class="page-item">
-            <a class="page-link" href="#">Next</a>
-          </li>
-        </ul>
-
-        <div class="bborder"></div>
-
-        <form class="enter-answer">
-          <textarea placeholder="Enter your answer here..." id="new_answer"></textarea>
-          <button class="dblock mleft mbottom btn btn-success">Answer</button>
-        </form>
-
-      </div>
-
-      <div class="col-4">
-        <div class="popular-zone">
-          <div class="tags">
-            <h2>Popular Tags</h2>
-            <a class="tag" id="tag-1" href="#">perl</a>
-            <a class="tag" id="tag-2" href="#">python</a>
-            <a class="tag" id="tag-3" href="#">TechnoPark</a>
-            <a class="tag" id="tag-4" href="#">MySQL</a>
-            <a class="tag" id="tag-5" href="#">django</a>
-            <a class="tag" id="tag-6" href="#">Mail.Ru</a>
-            <a class="tag" id="tag-7" href="#">Voloshin</a>
-            <a class="tag" id="tag-8" href="#">Firefox</a>
-          </div>
-          <div class="members">
-            <h2>Best Members</h2>
-            <a class="member" id="member-1" href="#">Mr. Freeman</a>
-            <a class="member" id="member-2" href="#">Dr. House</a>
-            <a class="member" id="member-3" href="#">Bender</a>
-            <a class="member" id="member-4" href="#">Queen Victoria</a>
-            <a class="member" id="member-5" href="#">V. Pupkin</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</main>
-
-<footer class="bg-light">
-  <div class="container">
-    <span class="text-muted">Place sticky footer content here.</span>
-  </div>
-</footer>
-  </body>
-</html>
+{% endblock %}

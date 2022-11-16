@@ -8,6 +8,10 @@
     height: 70px;
 }
 
+h1 + .mleft {
+    margin-left: 15px;
+}
+
 .swipe {
     width: 45px;
     height: 43px;
@@ -29,9 +33,6 @@
     border-radius: 6px;
     min-height: 168px;
     margin: auto 20px 20px 5px;
-}
-
-.bborder {
     border-bottom: 2px solid gray;
 }
 
@@ -59,4 +60,8 @@ div.form-checkbox {
 label.with-checkbox {
     text-align: left;
     margin-left: 5px;
+}
+
+.question-tag {
+    margin: 5px;
 }

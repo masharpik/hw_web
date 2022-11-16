@@ -130,6 +130,9 @@ nav .avatar, .logo {
     color:antiquewhite;
     margin-bottom: 0;
 }
+.user-data {
+    display: flex;
+}
 .authorization > a.l {
     margin: auto 5px;
 }
@@ -153,4 +156,17 @@ nav .avatar, .logo {
 .member {
     font-size: large;
     display: block;
+}
+
+.dflex {
+    display: flex;
+    align-items: center;
+}
+
+.mleft {
+    margin-left: 7px;
+}
+
+.mbottom {
+    margin-bottom: 10px;
 }

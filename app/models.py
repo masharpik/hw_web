@@ -46,7 +46,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     avatar = models.ImageField(blank=True, null=True)
-    email = models.CharField(max_length=33)
+    email = models.EmailField(max_length=33)
 
     objects = ProfileManager()
 
@@ -54,8 +54,8 @@ class Profile(models.Model):
 class Question(models.Model):
     title = models.CharField(max_length=33)
     text = models.CharField(max_length=255)
-    profile_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    tag = models.ManyToMayField(Tag)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    tag = models.ManyToManyField(Tag)
     score = models.IntegerField(default=0)
     date = models.DateTimeField(auto_now_add=True)
 
@@ -64,8 +64,8 @@ class Question(models.Model):
 
 class Answer(models.Model):
     text = models.CharField(max_length=255)
-    profile_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    question_id = models.ForeignKey()
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
     score = models.IntegerField(default=0)
     correctness = models.BooleanField(default=False)
 
@@ -73,10 +73,13 @@ class Answer(models.Model):
 
 
 class VoteQuestion(models.Model):
-    question_id = models.ForeignKey(Question, on_delete=models.CASCADE)
-    profile_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+
     class Meta:
-        unique_together = ['question_id', 'profile_id']
+        unique_together = ['question', 'profile']
+
 
     is_like = models.BooleanField()
 
@@ -84,10 +87,13 @@ class VoteQuestion(models.Model):
 
 
 class VoteAnswer(models.Model):
-    answer_id = models.ForeignKey(Answer, on_delete=models.CASCADE)
-    profile_id = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+
     class Meta:
-        unique_together = ['answer_id', 'profile_id']
+        unique_together = ['answer', 'profile']
+
 
     is_like = models.BooleanField()
 

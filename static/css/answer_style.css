@@ -18,3 +18,8 @@ a.count-answers {
     cursor: default;
     color: #999;
 }
+
+.question-title > a {
+    pointer-events: none;
+    cursor: default;
+}

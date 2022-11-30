@@ -65,3 +65,8 @@ label.with-checkbox {
 .question-tag {
     margin: 5px;
 }
+
+.question-title > a {
+    color: black;
+    text-decoration: none;
+}

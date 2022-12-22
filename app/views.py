@@ -2,6 +2,30 @@ from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render
 from . import models
 from django.core.paginator import Paginator
+from app.models import Tag, Profile, Question, Answer, VoteQuestion, VoteAnswer
+
+# ANSWERS_FOR_QUESTIONS = [
+#     {
+#         'id': answer.id,
+#         'text': answer.text,
+#         'is_correct': answer.correctness,
+#         'score': 0
+#     }
+#     for answer in Answer.objects.all()
+# ]
+
+# QUESTIONS = [
+#     {
+#         'id': question.id,
+#         'title': question.title,
+#         'text': question.text,
+#         'count_answers': Answer.objects.filter(question=question).count(),
+#         'tags': Question.tags.count(),
+#         'score': 0,
+#         'answers': ANSWERS_FOR_QUESTIONS
+#     }
+#     for question in Question.objects.all()
+# ]
 
 def get_paginator_data(list_data, per_page, curr_page):
     paginator = Paginator(list_data, per_page)

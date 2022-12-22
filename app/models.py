@@ -1,29 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# ANSWERS_FOR_QUESTIONS = [
-#     {
-#         'id': id,
-#         'text': f"Text of answer #{id + 1}",
-#         'is_correct': bool(id % 2),
-#         'score': id % 3
-#     }
-#     for id in range(21)
-# ]
-
-# QUESTIONS = [
-#     {
-#         'id': id,
-#         'title': f"Question #{id + 1}",
-#         'text': f"Text of question #{id + 1}",
-#         'count_answers': id % 3 + 1,
-#         'tags': ['bender', 'milk', 'python'],
-#         'score': id % 4,
-#         'answers': ANSWERS_FOR_QUESTIONS
-#     }
-#     for id in range(66)
-# ]
-
 class ProfileManager(models.Manager):
     pass
 
@@ -63,45 +40,55 @@ class Tag(models.Model):
 
     objects = TagManager()
 
+    def __str__(self):
+        return f"Tag {self.name}"
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    avatar = models.ImageField(blank=True, null=True)
-    email = models.EmailField(max_length=33)
+    avatar = models.ImageField(blank=True, null=True, upload_to='profile_images')
 
     objects = ProfileManager()
+
+    def __str__(self):
+        return f"Profile {self.user.username}"
 
 
 class Question(models.Model):
     title = models.CharField(max_length=33)
     text = models.CharField(max_length=255)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    tag = models.ManyToManyField(Tag)
-    score = models.IntegerField(default=0)
-    date = models.DateTimeField(auto_now_add=True)
+    tags = models.ManyToManyField(Tag)
+    datetime = models.DateTimeField(auto_now_add=True)
 
     objects = QuestionManager()
+
+    def __str__(self):
+        return f"Question {self.title}"
 
 
 class Answer(models.Model):
     text = models.CharField(max_length=255)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    score = models.IntegerField(default=0)
     correctness = models.BooleanField(default=False)
 
     objects = AnswerManager()
+
+    def __str__(self):
+        return f"Answer {self.text}"
 
 
 class VoteQuestion(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"VoteQuestion"
 
     class Meta:
         unique_together = ['question', 'profile']
-
 
     is_like = models.BooleanField()
 
@@ -112,10 +99,11 @@ class VoteAnswer(models.Model):
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return f"VoteQuestion"
 
     class Meta:
         unique_together = ['answer', 'profile']
-
 
     is_like = models.BooleanField()
 

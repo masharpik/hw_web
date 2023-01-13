@@ -71,22 +71,22 @@
         <div class="popular-zone">
           <div class="tags">
             <h2>Popular Tags</h2>
-            <a class="tag" id="tag-1" href="{% url 'tag' tag_name='perl' %}">perl</a>
-            <a class="tag" id="tag-2" href="{% url 'tag' tag_name='python' %}">python</a>
-            <a class="tag" id="tag-3" href="{% url 'tag' tag_name='TechnoPark' %}">TechnoPark</a>
-            <a class="tag" id="tag-4" href="{% url 'tag' tag_name='MySQL' %}">MySQL</a>
-            <a class="tag" id="tag-5" href="{% url 'tag' tag_name='django' %}">django</a>
-            <a class="tag" id="tag-6" href="{% url 'tag' tag_name='Mail.Ru' %}">Mail.Ru</a>
-            <a class="tag" id="tag-7" href="{% url 'tag' tag_name='Voloshin' %}">Voloshin</a>
-            <a class="tag" id="tag-8" href="{% url 'tag' tag_name='Firefox' %}">Firefox</a>
+            <a class="tag" id="tag-1" href="{% url 'tag' tag_name=tags.0.name %}">{{tags.0.name}}</a>
+            <a class="tag" id="tag-2" href="{% url 'tag' tag_name=tags.1.name %}">{{tags.1.name}}</a>
+            <a class="tag" id="tag-3" href="{% url 'tag' tag_name=tags.2.name %}">{{tags.2.name}}</a>
+            <a class="tag" id="tag-4" href="{% url 'tag' tag_name=tags.3.name %}">{{tags.3.name}}</a>
+            <a class="tag" id="tag-5" href="{% url 'tag' tag_name=tags.4.name %}">{{tags.4.name}}</a>
+            <a class="tag" id="tag-6" href="{% url 'tag' tag_name=tags.5.name %}">{{tags.5.name}}</a>
+            <a class="tag" id="tag-7" href="{% url 'tag' tag_name=tags.6.name %}">{{tags.6.name}}</a>
+            <a class="tag" id="tag-8" href="{% url 'tag' tag_name=tags.7.name %}">{{tags.7.name}}</a>
           </div>
           <div class="members">
             <h2>Best Members</h2>
-            <a class="member" id="member-1" href="#">Mr. Freeman</a>
-            <a class="member" id="member-2" href="#">Dr. House</a>
-            <a class="member" id="member-3" href="#">Bender</a>
-            <a class="member" id="member-4" href="#">Queen Victoria</a>
-            <a class="member" id="member-5" href="#">V. Pupkin</a>
+            <a class="member" id="member-1" href="#">{{members.0.user.username}}</a>
+            <a class="member" id="member-2" href="#">{{members.1.user.username}}</a>
+            <a class="member" id="member-3" href="#">{{members.2.user.username}}</a>
+            <a class="member" id="member-4" href="#">{{members.3.user.username}}</a>
+            <a class="member" id="member-5" href="#">{{members.4.user.username}}</a>
           </div>
         </div>
       </div>

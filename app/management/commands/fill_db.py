@@ -2,7 +2,7 @@ from django.core.management.base import BaseCommand
 from itertools import islice
 from django.contrib.auth.models import User
 from app.models import Tag, Profile, Question, Answer, VoteQuestion, VoteAnswer
-from random import choice
+from django.db.models import Count
 
 class Command(BaseCommand):
     help = 'populates currencies table'
@@ -14,64 +14,48 @@ class Command(BaseCommand):
         parser.add_argument('ratio', nargs='?', type=int, default=self.RATIO, help='Количество')
 
     def fill_vote_questions(self, ratio):
-        profiles = Profile.objects.all()
-        questions = Question.objects.all()
-        idx_p = 0
-        idx_q = 0
+        profiles = Profile.objects.all()[:1001]
+        questions = Question.objects.all()[:1001]
 
         batch_size = 10000
         objs = []
 
-        been = []
-        for j in range(0, ratio):
-            while (idx_p % ((ratio - 1) // 100 + 1), idx_q % ((ratio - 1) // 10 + 1)) in been:
-                if idx_q + 1 == ((ratio - 1) // 10 + 1):
-                    idx_q = 0 % ((ratio - 1) // 10 + 1)
-                    idx_p += 1 % ((ratio - 1) // 100 + 1)
-                else:
-                    idx_q += 1 % ((ratio - 1) // 10 + 1)
-            prof = profiles[idx_p]
-            quest = questions[idx_q]
+        iter = 0
+        for i in profiles:
+            for j in questions:
+                vote_question = VoteQuestion(is_like=False)
+                vote_question.profile = i
+                vote_question.question = j
+                objs.append(vote_question)
+            iter += 1
+            print(iter)
+            if iter == 25:
+                objs = (y for y in objs)
+                VoteQuestion.objects.bulk_create(objs)
+                iter = 0
+                objs = []
 
-            been.append((idx_p, idx_q))
-
-            vote_question = VoteQuestion(is_like=bool(j))
-            vote_question.profile=prof
-            vote_question.question=quest
-            objs.append(vote_question)
-        print("END")
-        objs = (y for y in objs)
-        while True:
-            batch = list(islice(objs, batch_size))
-            if not batch:
-                break
-            VoteQuestion.objects.bulk_create(batch, batch_size)
-    
     def fill_vote_answers(self, ratio):
-        profiles = Profile.objects.all()
-        answers = Answer.objects.all()
+        profiles = Profile.objects.all()[:1001]
+        answers = Answer.objects.all()[:1001]
+
         batch_size = 10000
         objs = []
-        need_to_circle = False
-        for i in range(0, ratio, self.STEP):
-            prof = profiles[(i * self.STEP) % ((ratio - 1) // 100 + 1)]
-            answ = answers[(i * self.STEP) % ratio]
-            for j in range(i, i + self.STEP):
-                if j >= ratio:
-                    need_to_circle = True
-                    break
-                vote_answer = VoteAnswer(is_like=bool(i))
-                vote_answer.profile=prof
-                vote_answer.answer=answ
+
+        iter = 0
+        for i in profiles:
+            for j in answers:
+                vote_answer = VoteAnswer(is_like=False)
+                vote_answer.profile = i
+                vote_answer.answer = j
                 objs.append(vote_answer)
-            if need_to_circle:
-                break
-        objs = (y for y in objs)
-        while True:
-            batch = list(islice(objs, batch_size))
-            if not batch:
-                break
-            VoteAnswer.objects.bulk_create(batch, batch_size)
+            iter += 1
+            print(iter)
+            if iter == 25:
+                objs = (y for y in objs)
+                VoteAnswer.objects.bulk_create(objs)
+                iter = 0
+                objs = []
 
     def fill_profiles(self, ratio):
         users = User.objects.all()
@@ -163,6 +147,14 @@ class Command(BaseCommand):
             if not batch:
                 break
             Answer.objects.bulk_create(batch, batch_size)
+    
+    def update_tags_name(self):
+        TAGS = Tag.objects.all()
+        i = 0
+        for tag in TAGS:
+            tag.name = f"Tag{i}"
+            i += 1
+            tag.save()
 
     def handle(self, *args, **options):
         ratio = options['ratio']
@@ -196,11 +188,29 @@ class Command(BaseCommand):
         # print("ANSWERS FILLED")
 
         # VoteQuestion.objects.all().delete()
-        print("VoteQuestion WILL FILL")
-        self.fill_vote_questions(ratio * 100 + 1)
-        print("VoteQuestion FILLED")
+        # print("VoteQuestion WILL FILL")
+        # self.fill_vote_questions(ratio * 100 + 1)
+        # print("VoteQuestion FILLED")
 
         # VoteAnswer.objects.all().delete()
         # print("VoteAnswer WILL FILL")
-        # self.fill_vote_anwers(ratio * 100 + 1)
+        # self.fill_vote_answers(ratio * 100 + 1)
         # print("VoteAnswer FILLED")
+
+        # print(Question.objects.all()[:10])
+        # print(list(Question.objects.all()[:10]))
+
+        # tags = Tag.objects.annotate(Count('question')).order_by('-question__count')[:8]
+        # for e in tags:
+        #     print(e.name)
+        # print(e.tags.all())
+        # question = Question.objects.all()[0]
+        # c = Question.objects.filter(votequestion__question=question, votequestion__is_like=False).count()
+        # print(c)
+
+        # self.update_tags_name()
+
+        # m = Profile.objects.annotate(Count('question')).order_by('-question__count')[:7]
+        # print(m)
+        # for e in m:
+        #     print(Question.objects.filter(profile=e).count())

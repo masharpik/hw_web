@@ -1,38 +1,39 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Count
 
 class ProfileManager(models.Manager):
-    pass
+    def top_of_profiles(self):
+        return Profile.objects.annotate(Count('question')).order_by('-question__count')[:5]
 
 
 class VoteQuestionManager(models.Manager):
-    def get_score_of_question(question_id):
+    def get_score_of_question(self, question_id):
         pass
 
 
 class VoteAnswerManager(models.Manager):
-    def get_score_of_answer(answer_id):
+    def get_score_of_answer(self, answer_id):
         pass
 
 
 class TagManager(models.Manager):
-    def get_questiona_by_tag(tag_name):
-        pass
+    def top_of_tags(self):
+        return Tag.objects.annotate(Count('question')).order_by('-question__count')[:8]
 
 
 class QuestionManager(models.Manager):
-    def get_new_questions():
-        pass
+    def get_new_questions(self):
+        return Question.objects.all().order_by('datetime')
 
 
-    def get_hot_questions():
+    def get_hot_questions(self):
         pass
 
 
 class AnswerManager(models.Manager):
-    def get_answers_by_question(question_id):
+    def get_answers_by_question(self, question_id):
         pass
-
 
 
 class Tag(models.Model):
@@ -66,6 +67,20 @@ class Question(models.Model):
 
     def __str__(self):
         return f"Question {self.title}"
+
+    def get_likes_count(self):
+        return Question.objects.filter(votequestion__question=self,
+            votequestion__is_like=True).count()
+    
+    def get_dislikes_count(self):
+        return Question.objects.filter(votequestion__question=self,
+            votequestion__is_like=False).count()
+    
+    def get_count_answer(self):
+        return Question.objects.filter(answer__question=self).count()
+    
+    def get_tags(self):
+        return self.tags.all()
 
 
 class Answer(models.Model):

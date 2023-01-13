@@ -24,7 +24,8 @@ class TagManager(models.Manager):
 
 class QuestionManager(models.Manager):
     def get_new_questions(self):
-        return Question.objects.all().order_by('datetime')
+        q = Question.objects.all().order_by('datetime')
+        return q
 
 
     def get_hot_questions(self):

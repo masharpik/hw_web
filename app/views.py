@@ -38,7 +38,6 @@ def index(request: HttpRequest):
     
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
-    print(MEMBERS)
 
     context = {'questions': page.object_list, 'paginator': paginator_data, 'curr_url': 'index', 'tags': TAGS, 'members': MEMBERS}
     return render(request, 'index.html', context=context)

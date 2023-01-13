@@ -214,3 +214,32 @@ class Command(BaseCommand):
         # print(m)
         # for e in m:
         #     print(Question.objects.filter(profile=e).count())
+
+        # a = 20
+        # b = 30
+        # q = Question.objects.all().order_by('datetime')[a:b]
+        # print(q)
+        # q = Question.objects.all().order_by('datetime')
+        # print(q)
+        # print(1)
+        # Profile.objects.top_of_profiles()
+        # print(1)
+        # print(2)
+        # Tag.objects.top_of_tags()
+        # print(2)
+        # print(3)
+        # Question.objects.get_new_questions()
+        # print(3)
+        # question = Question.objects.first()
+        # print(4)
+        # question.get_likes_count()
+        # print(4)
+        # print(5)
+        # print(question.get_dislikes_count())
+        # print(5)
+        # print(6)
+        # question.get_count_answer()
+        # print(6)
+        # print(7)
+        # question.get_tags()
+        # print(7)

@@ -127,20 +127,15 @@ class Command(BaseCommand):
         questions = Question.objects.all()
         batch_size = 10000
         objs = []
-        need_to_circle = False
-        for i in range(0, ratio, self.STEP):
-            prof = profiles[(i * self.STEP) % ((ratio - 1) // 100 + 1)]
-            quest = questions[(i * self.STEP) % ((ratio - 1) // 10 + 1)]
-            for j in range(i, i + self.STEP):
-                if j >= ratio:
-                    need_to_circle = True
-                    break
+        i = 0
+        for profile in profiles[:11]:
+            for question in questions:
                 answer = Answer(text='Text of the answer #%s' % i, correctness=bool(i))
-                answer.profile=prof
-                answer.question=quest
+                i += 1
+                answer.profile=profile
+                answer.question=question
                 objs.append(answer)
-            if need_to_circle:
-                break
+
         objs = (y for y in objs)
         while True:
             batch = list(islice(objs, batch_size))
@@ -192,10 +187,10 @@ class Command(BaseCommand):
         # self.fill_vote_questions(ratio * 100 + 1)
         # print("VoteQuestion FILLED")
 
-        # VoteAnswer.objects.all().delete()
-        # print("VoteAnswer WILL FILL")
-        # self.fill_vote_answers(ratio * 100 + 1)
-        # print("VoteAnswer FILLED")
+        VoteAnswer.objects.all().delete()
+        print("VoteAnswer WILL FILL")
+        self.fill_vote_answers(ratio * 100 + 1)
+        print("VoteAnswer FILLED")
 
         # print(Question.objects.all()[:10])
         # print(list(Question.objects.all()[:10]))
@@ -225,7 +220,8 @@ class Command(BaseCommand):
         # Profile.objects.top_of_profiles()
         # print(1)
         # print(2)
-        # Tag.objects.top_of_tags()
+        # tags = Tag.objects.top_of_tags()
+        # print(Tag.objects.annotate(Count('question')).order_by('-question__count')[:8].query)
         # print(2)
         # print(3)
         # Question.objects.get_new_questions()
@@ -243,3 +239,13 @@ class Command(BaseCommand):
         # print(7)
         # question.get_tags()
         # print(7)
+        # QUESTIONS = Question.objects.get_new_questions()
+        # s = {}
+        # for q in QUESTIONS:
+        #     s[q.id] = q.get_likes_count()
+        # print(s)
+        # qs = Question.objects.all()[:1]
+        # print(qs.query)
+        # print(qs[0])
+        # print(qs[0].answer_set.all())
+        # print(qs.query)

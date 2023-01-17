@@ -24,7 +24,7 @@
         <span>Tags: </span>
         <div class="question-tags dinline">
           {% for tag in question.get_tags %}
-            <a class="question-tag" href="{% url 'tag' tag_name=tag %}">{{ tag.name }}</a>
+            <a class="question-tag" href="{% url 'tag' tag_name=tag.name %}">{{ tag.name }}</a>
           {% endfor %}
         </div>
       </div>

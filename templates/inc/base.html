@@ -71,22 +71,15 @@
         <div class="popular-zone">
           <div class="tags">
             <h2>Popular Tags</h2>
-            <a class="tag" id="tag-1" href="{% url 'tag' tag_name=tags.0.name %}">{{tags.0.name}}</a>
-            <a class="tag" id="tag-2" href="{% url 'tag' tag_name=tags.1.name %}">{{tags.1.name}}</a>
-            <a class="tag" id="tag-3" href="{% url 'tag' tag_name=tags.2.name %}">{{tags.2.name}}</a>
-            <a class="tag" id="tag-4" href="{% url 'tag' tag_name=tags.3.name %}">{{tags.3.name}}</a>
-            <a class="tag" id="tag-5" href="{% url 'tag' tag_name=tags.4.name %}">{{tags.4.name}}</a>
-            <a class="tag" id="tag-6" href="{% url 'tag' tag_name=tags.5.name %}">{{tags.5.name}}</a>
-            <a class="tag" id="tag-7" href="{% url 'tag' tag_name=tags.6.name %}">{{tags.6.name}}</a>
-            <a class="tag" id="tag-8" href="{% url 'tag' tag_name=tags.7.name %}">{{tags.7.name}}</a>
+            {% for some_tag in tags %}
+              <a class="tag" id="tag-{{forloop.counter}}" href="{% url 'tag' tag_name=some_tag.name %}">{{some_tag.name}}</a>
+            {% endfor %}
           </div>
           <div class="members">
             <h2>Best Members</h2>
-            <a class="member" id="member-1" href="#">{{members.0.user.username}}</a>
-            <a class="member" id="member-2" href="#">{{members.1.user.username}}</a>
-            <a class="member" id="member-3" href="#">{{members.2.user.username}}</a>
-            <a class="member" id="member-4" href="#">{{members.3.user.username}}</a>
-            <a class="member" id="member-5" href="#">{{members.4.user.username}}</a>
+            {% for some_member in members %}
+              <a class="member" id="member-{{forloop.counter}}" href="#">{{some_member.user.username}}</a>
+            {% endfor %}
           </div>
         </div>
       </div>

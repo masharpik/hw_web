@@ -21,15 +21,36 @@ class TagManager(models.Manager):
     def top_of_tags(self):
         return Tag.objects.annotate(Count('question')).order_by('-question__count')[:8]
 
+    def get_tag_by_name(self, tag_name):
+        return Tag.objects.get(name=tag_name)
+            
 
 class QuestionManager(models.Manager):
-    def get_new_questions(self):
-        q = Question.objects.all().order_by('datetime')
-        return q
+    def get_new_questions(self, a, b):
+        return Question.objects.all().order_by('datetime')[a:b]
 
+    def get_hot_questions(self, a, b):
+        # q = Question.objects.all()
+        # answer = [question for question in q]
+        # answer.sort(key=lambda x: x.get_likes_count(), reverse=True)
+        # return answer[a:b]
+        return Question.objects.order_by('-answer__count')[a:b].annotate(Count('answer'))
+        # return Question.objects.order_by('-votequestion__likes_count')[a:b].annotate(likes_count=Count('votequestion'))
+        # return Question.objects.annotate(likes_count=Count('votequestion')).order_by('likes_count')[a:b]
 
-    def get_hot_questions(self):
-        pass
+    def get_curr_count(self):
+        return Question.objects.all().count()
+
+    def get_questions_by_tag(self, tag, a, b):
+        questions = Question.objects.all()[a:b]
+        result = []
+        for question in questions:
+            if tag.is_in_question(question):
+                result.append(question)
+        return result
+    
+    def get_question_by_id(self, id):
+        return Question.objects.get(pk=id)
 
 
 class AnswerManager(models.Manager):
@@ -38,12 +59,15 @@ class AnswerManager(models.Manager):
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=15)
+    name = models.CharField(max_length=15, unique=True)
 
     objects = TagManager()
 
     def __str__(self):
         return f"Tag {self.name}"
+
+    def is_in_question(self, question):
+        return self.question_set.filter(pk=question.pk).exists()
 
 
 class Profile(models.Model):
@@ -82,6 +106,9 @@ class Question(models.Model):
     
     def get_tags(self):
         return self.tags.all()
+    
+    def get_answers(self):
+        return self.answer_set.all()
 
 
 class Answer(models.Model):
@@ -94,6 +121,17 @@ class Answer(models.Model):
 
     def __str__(self):
         return f"Answer {self.text}"
+
+    def get_likes_count(self):
+        return Answer.objects.filter(voteanswer__answer=self,
+            voteanswer__is_like=True).count()
+    
+    def get_dislikes_count(self):
+        return Answer.objects.filter(voteanswer__answer=self,
+            voteanswer__is_like=False).count()
+    
+    def get_correctness(self):
+        return self.correctness
 
 
 class VoteQuestion(models.Model):

@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render
 from . import models
 from django.core.paginator import Paginator
@@ -25,21 +25,27 @@ def get_paginator_data(list_data, per_page, curr_page):
     return (page, paginator_data)
 
 
+def forming_questions(questions, need_length, curr_pos):
+    result = [0 for _ in range(0, curr_pos)] + list(questions) + [0 for _ in range(curr_pos + 10, need_length)]
+    return result
+
+
 def index(request: HttpRequest):
     input_page = request.GET.get('page', '0')
     if not input_page.isdigit():
         return HttpResponse(status=404)
     input_page = int(input_page)
 
-    QUESTIONS = Question.objects.get_new_questions()
-    page, paginator_data = get_paginator_data(QUESTIONS, 10, input_page)
-    if not page:
+    QUESTIONS = Question.objects.get_new_questions(input_page * 10, (input_page + 1) * 10)
+    page, paginator_data = get_paginator_data(forming_questions(QUESTIONS, Question.objects.get_curr_count(), input_page), 10, input_page)
+    if not paginator_data:
         return HttpResponse(status=404)
     
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
 
-    context = {'questions': page.object_list, 'paginator': paginator_data, 'curr_url': 'index', 'tags': TAGS, 'members': MEMBERS}
+    context = {'questions': QUESTIONS, 'paginator': paginator_data,
+        'curr_url': 'index', 'tags': TAGS, 'members': MEMBERS}
     return render(request, 'index.html', context=context)
 
 
@@ -48,28 +54,42 @@ def hot(request: HttpRequest):
     if not input_page.isdigit():
         return HttpResponse(status=404)
     input_page = int(input_page)
-    
-    QUESTIONS = Question.objects.all()
-    page, paginator_data = get_paginator_data(QUESTIONS, 10, input_page)
-    if not page:
-        return HttpResponse(status=404)
 
-    context = {'questions': page.object_list, 'paginator': paginator_data, 'curr_url': 'hot'}
+    QUESTIONS = Question.objects.get_hot_questions(input_page * 10, (input_page + 1) * 10)
+    # print(QUESTIONS.query)
+    # print(f"count is = {QUESTIONS[0].likes_count}")
+    page, paginator_data = get_paginator_data(forming_questions(QUESTIONS, Question.objects.get_curr_count(), input_page), 10, input_page)
+    if not paginator_data:
+        return HttpResponse(status=404)
+    
+    TAGS = Tag.objects.top_of_tags()
+    MEMBERS = Profile.objects.top_of_profiles()
+
+    context = {'questions': QUESTIONS, 'paginator': paginator_data,
+        'curr_url': 'hot', 'tags': TAGS, 'members': MEMBERS}
     return render(request, 'hot.html', context=context)
 
 def tag(request: HttpRequest, tag_name: str):
-
     input_page = request.GET.get('page', '0')
     if not input_page.isdigit():
         return HttpResponse(status=404)
     input_page = int(input_page)
+    try:
+        tag = Tag.objects.get_tag_by_name(tag_name)
+    except:
+        return HttpResponseBadRequest()
 
-    QUESTIONS = Question.objects.all()
-    page, paginator_data = get_paginator_data(QUESTIONS, 10, input_page)
-    if not page:
+    QUESTIONS = Question.objects.get_questions_by_tag(tag, input_page * 10, (input_page + 1) * 10)
+    page, paginator_data = get_paginator_data(forming_questions(QUESTIONS, Question.objects.get_curr_count(), input_page), 10, input_page)
+    if not paginator_data:
         return HttpResponse(status=404)
+    
+    TAGS = Tag.objects.top_of_tags()
+    MEMBERS = Profile.objects.top_of_profiles()
 
-    context = {'tag': tag_name, 'questions': page.object_list, 'paginator': paginator_data, 'curr_url': 'tag'}
+    context = {'tag': tag_name, 'questions': QUESTIONS, 'paginator': paginator_data,
+        'curr_url': 'hot', 'tags': TAGS, 'members': MEMBERS}
+    # context = {'questions': page.object_list, 'paginator': paginator_data, 'curr_url': 'tag'}
     return render(request, 'tag.html', context=context)
 
 
@@ -82,18 +102,18 @@ def login(request: HttpRequest):
 
 
 def question(request: HttpRequest, question_id: int):
-    QUESTIONS = Question.objects.values_list('id', flat=True)
-    if question_id >= len(models.QUESTIONS):
-        return HttpResponse(status=404)
-
-    question_item = QUESTIONS[question_id]
-
+    try:
+        question_item = Question.objects.get_question_by_id(question_id)
+    except:
+        return HttpResponseBadRequest()
+    
     input_page = request.GET.get('page', '0')
     if not input_page.isdigit():
         return HttpResponse(status=404)
     input_page = int(input_page)
 
-    page, paginator_data = get_paginator_data(question_item['answers'], 5, input_page)
+    ANSWERS = question_item.get_answers()
+    page, paginator_data = get_paginator_data(ANSWERS, 5, input_page)
     if not page:
         return HttpResponse(status=404)
 

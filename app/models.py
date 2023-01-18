@@ -26,23 +26,23 @@ class TagManager(models.Manager):
             
 
 class QuestionManager(models.Manager):
-    def get_new_questions(self, a, b):
-        return Question.objects.all().order_by('datetime')[a:b]
+    def get_new_questions(self):
+        return Question.objects.all().order_by('datetime')
 
-    def get_hot_questions(self, a, b):
+    def get_hot_questions(self):
         # q = Question.objects.all()
         # answer = [question for question in q]
         # answer.sort(key=lambda x: x.get_likes_count(), reverse=True)
         # return answer[a:b]
-        return Question.objects.order_by('-answer__count')[a:b].annotate(Count('answer'))
+        return Question.objects.order_by('-answer__count').annotate(Count('answer'))
         # return Question.objects.order_by('-votequestion__likes_count')[a:b].annotate(likes_count=Count('votequestion'))
         # return Question.objects.annotate(likes_count=Count('votequestion')).order_by('likes_count')[a:b]
 
     def get_curr_count(self):
         return Question.objects.all().count()
 
-    def get_questions_by_tag(self, tag, a, b):
-        questions = Question.objects.all()[a:b]
+    def get_questions_by_tag(self, tag):
+        questions = Question.objects.all()
         result = []
         for question in questions:
             if tag.is_in_question(question):

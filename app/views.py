@@ -7,8 +7,10 @@ from app.models import Tag, Profile, Question, Answer, VoteQuestion, VoteAnswer
 def get_paginator_data(list_data, per_page, curr_page):
     paginator = Paginator(list_data, per_page)
     num_pages = paginator.num_pages
+    print("WWW", num_pages)
     if curr_page < 0 or curr_page >= num_pages:
         return (0, [])
+    print("WWW", num_pages)
     page = paginator.page(curr_page + 1)
     paginator_data = {
         'enabled_previous': page.has_previous(),
@@ -25,26 +27,21 @@ def get_paginator_data(list_data, per_page, curr_page):
     return (page, paginator_data)
 
 
-def forming_questions(questions, need_length, curr_pos):
-    result = [0 for _ in range(0, curr_pos)] + list(questions) + [0 for _ in range(curr_pos + 10, need_length)]
-    return result
-
-
 def index(request: HttpRequest):
     input_page = request.GET.get('page', '0')
     if not input_page.isdigit():
         return HttpResponse(status=404)
     input_page = int(input_page)
 
-    QUESTIONS = Question.objects.get_new_questions(input_page * 10, (input_page + 1) * 10)
-    page, paginator_data = get_paginator_data(forming_questions(QUESTIONS, Question.objects.get_curr_count(), input_page), 10, input_page)
+    QUESTIONS = Question.objects.get_new_questions()
+    page, paginator_data = get_paginator_data(QUESTIONS, 10, input_page)
     if not paginator_data:
         return HttpResponse(status=404)
     
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
 
-    context = {'questions': QUESTIONS, 'paginator': paginator_data,
+    context = {'questions': page.object_list, 'paginator': paginator_data,
         'curr_url': 'index', 'tags': TAGS, 'members': MEMBERS}
     return render(request, 'index.html', context=context)
 
@@ -55,17 +52,17 @@ def hot(request: HttpRequest):
         return HttpResponse(status=404)
     input_page = int(input_page)
 
-    QUESTIONS = Question.objects.get_hot_questions(input_page * 10, (input_page + 1) * 10)
+    QUESTIONS = Question.objects.get_hot_questions()
     # print(QUESTIONS.query)
     # print(f"count is = {QUESTIONS[0].likes_count}")
-    page, paginator_data = get_paginator_data(forming_questions(QUESTIONS, Question.objects.get_curr_count(), input_page), 10, input_page)
+    page, paginator_data = get_paginator_data(QUESTIONS, 10, input_page)
     if not paginator_data:
         return HttpResponse(status=404)
     
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
 
-    context = {'questions': QUESTIONS, 'paginator': paginator_data,
+    context = {'questions': page.object_list, 'paginator': paginator_data,
         'curr_url': 'hot', 'tags': TAGS, 'members': MEMBERS}
     return render(request, 'hot.html', context=context)
 
@@ -79,15 +76,15 @@ def tag(request: HttpRequest, tag_name: str):
     except:
         return HttpResponseBadRequest()
 
-    QUESTIONS = Question.objects.get_questions_by_tag(tag, input_page * 10, (input_page + 1) * 10)
-    page, paginator_data = get_paginator_data(forming_questions(QUESTIONS, Question.objects.get_curr_count(), input_page), 10, input_page)
+    QUESTIONS = Question.objects.get_questions_by_tag(tag)
+    page, paginator_data = get_paginator_data(QUESTIONS, 10, input_page)
     if not paginator_data:
         return HttpResponse(status=404)
     
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
 
-    context = {'tag': tag_name, 'questions': QUESTIONS, 'paginator': paginator_data,
+    context = {'tag': tag_name, 'questions': page.object_list, 'paginator': paginator_data,
         'curr_url': 'hot', 'tags': TAGS, 'members': MEMBERS}
     # context = {'questions': page.object_list, 'paginator': paginator_data, 'curr_url': 'tag'}
     return render(request, 'tag.html', context=context)

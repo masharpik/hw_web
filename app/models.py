@@ -23,6 +23,9 @@ class TagManager(models.Manager):
 
     def get_tag_by_name(self, tag_name):
         return Tag.objects.get(name=tag_name)
+    
+    def get_questions_by_tag(self, tag_name):
+        return Tag.objects.filter(name=tag_name)[0].question_set.all()
             
 
 class QuestionManager(models.Manager):
@@ -41,18 +44,6 @@ class QuestionManager(models.Manager):
     def get_curr_count(self):
         return Question.objects.all().count()
 
-    def get_questions_by_tag(self, tag, a, b):
-        N = Question.objects.all().count()
-
-        questions = Question.objects.all()[a:b]
-        result = []
-        for i in range(N):
-            if a <= i < b:
-                result.append(questions[i])
-            else:
-                result.append(0)
-        return result
-    
     def get_question_by_id(self, id):
         return Question.objects.get(pk=id)
 
@@ -69,9 +60,6 @@ class Tag(models.Model):
 
     def __str__(self):
         return f"Tag {self.name}"
-
-    def is_in_question(self, question):
-        return self.question_set.filter(pk=question.pk).exists()
 
 
 class Profile(models.Model):

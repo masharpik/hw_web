@@ -67,11 +67,12 @@ def tag(request: HttpRequest, tag_name: str):
     if not input_page.isdigit():
         return HttpResponse(status=404)
     input_page = int(input_page)
+
     try:
-        tag = Tag.objects.get_tag_by_name(tag_name)
+        QUESTIONS = Tag.objects.get_questions_by_tag(tag_name)
     except:
         return HttpResponseBadRequest()
-    QUESTIONS = Question.objects.get_questions_by_tag(tag, input_page * 10, (input_page + 1) * 10)
+
     page, paginator_data = get_paginator_data(QUESTIONS, 10, input_page)
     if not paginator_data:
         return HttpResponse(status=404)
@@ -80,7 +81,7 @@ def tag(request: HttpRequest, tag_name: str):
     MEMBERS = Profile.objects.top_of_profiles()
 
     context = {'tag': tag_name, 'questions': page.object_list, 'paginator': paginator_data,
-        'curr_url': 'hot', 'tags': TAGS, 'members': MEMBERS}
+        'curr_url': 'tag', 'tags': TAGS, 'members': MEMBERS}
     # context = {'questions': page.object_list, 'paginator': paginator_data, 'curr_url': 'tag'}
     return render(request, 'tag.html', context=context)
 

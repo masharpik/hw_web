@@ -187,10 +187,10 @@ class Command(BaseCommand):
         # self.fill_vote_questions(ratio * 100 + 1)
         # print("VoteQuestion FILLED")
 
-        VoteAnswer.objects.all().delete()
-        print("VoteAnswer WILL FILL")
-        self.fill_vote_answers(ratio * 100 + 1)
-        print("VoteAnswer FILLED")
+        # VoteAnswer.objects.all().delete()
+        # print("VoteAnswer WILL FILL")
+        # self.fill_vote_answers(ratio * 100 + 1)
+        # print("VoteAnswer FILLED")
 
         # print(Question.objects.all()[:10])
         # print(list(Question.objects.all()[:10]))
@@ -249,3 +249,6 @@ class Command(BaseCommand):
         # print(qs[0])
         # print(qs[0].answer_set.all())
         # print(qs.query)
+
+        # print(Tag.objects.get_questions_by_tag("Tag5"))
+

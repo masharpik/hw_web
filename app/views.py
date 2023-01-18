@@ -7,10 +7,8 @@ from app.models import Tag, Profile, Question, Answer, VoteQuestion, VoteAnswer
 def get_paginator_data(list_data, per_page, curr_page):
     paginator = Paginator(list_data, per_page)
     num_pages = paginator.num_pages
-    print("WWW", num_pages)
     if curr_page < 0 or curr_page >= num_pages:
         return (0, [])
-    print("WWW", num_pages)
     page = paginator.page(curr_page + 1)
     paginator_data = {
         'enabled_previous': page.has_previous(),
@@ -53,8 +51,6 @@ def hot(request: HttpRequest):
     input_page = int(input_page)
 
     QUESTIONS = Question.objects.get_hot_questions()
-    # print(QUESTIONS.query)
-    # print(f"count is = {QUESTIONS[0].likes_count}")
     page, paginator_data = get_paginator_data(QUESTIONS, 10, input_page)
     if not paginator_data:
         return HttpResponse(status=404)
@@ -75,8 +71,7 @@ def tag(request: HttpRequest, tag_name: str):
         tag = Tag.objects.get_tag_by_name(tag_name)
     except:
         return HttpResponseBadRequest()
-
-    QUESTIONS = Question.objects.get_questions_by_tag(tag)
+    QUESTIONS = Question.objects.get_questions_by_tag(tag, input_page * 10, (input_page + 1) * 10)
     page, paginator_data = get_paginator_data(QUESTIONS, 10, input_page)
     if not paginator_data:
         return HttpResponse(status=404)

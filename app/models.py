@@ -41,12 +41,16 @@ class QuestionManager(models.Manager):
     def get_curr_count(self):
         return Question.objects.all().count()
 
-    def get_questions_by_tag(self, tag):
-        questions = Question.objects.all()
+    def get_questions_by_tag(self, tag, a, b):
+        N = Question.objects.all().count()
+
+        questions = Question.objects.all()[a:b]
         result = []
-        for question in questions:
-            if tag.is_in_question(question):
-                result.append(question)
+        for i in range(N):
+            if a <= i < b:
+                result.append(questions[i])
+            else:
+                result.append(0)
         return result
     
     def get_question_by_id(self, id):

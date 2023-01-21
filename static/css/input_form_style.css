@@ -1,19 +1,16 @@
-label {
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    width: 100%;
-    text-align: center;
-    padding: 2px;
+.dinline {
+    display: inline;
 }
 
-textarea {
-    width: 100%;
-    resize: none;
-    border-radius: 5px;
+.dflex {
+    display: flex;
+    align-items: center;
 }
 
-p.error {
-    color:red;
-    font-size: 1.1em;
-    font-family: 'Courier New', Courier, monospace;
-    margin-left: 5px;
+.mbottom {
+    margin-bottom: 10px;
+}
+
+.mleft {
+    margin-left: 7px;
 }

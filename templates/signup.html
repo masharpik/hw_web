@@ -4,21 +4,22 @@
 
 {% block links %}
 
-<link href="{% static 'css/settings_style.css' %}" rel="stylesheet">
 <link href="{% static 'css/input_form_style.css' %}" rel="stylesheet">
 
 {% endblock %}
 
 {% block content %}
 
-<h1>Settings</h1>
+<div class="dflex mbottom">
+  <h1 class="dinline">Sign up</h1>
+  <a class="mleft" href="{% url 'login' %}">Login</a>
+</div>
 
-<form novalidate class="form" id="form_settings" action="/profile/edit/" method="post">
+<form novalidate class="form" id="form_signup" action="/signup/" method="post">
   {% csrf_token %}
   {% bootstrap_form form_user %}
   {% bootstrap_form form_profile %}
-    
-  <button class="btn btn-outline-success">Save</button>
+  <button class="btn btn-outline-success">Register!</button>
 </form>
 
 {% endblock %}

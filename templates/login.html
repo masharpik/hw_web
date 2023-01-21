@@ -1,47 +1,24 @@
 {% extends "inc/base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block links %}
 
-<link href="{% static 'css/login_style.css' %}" rel="stylesheet">
 <link href="{% static 'css/input_form_style.css' %}" rel="stylesheet">
 
 {% endblock %}
 
 {% block content %}
 
-<h1>Log In</h1>
-<p class="error">Error: incorrect email</p>
-<form class="form" id="form_login"></form>
-
-<div class="email">
-    <div class="row">
-        <div class="col-3">
-            <label for="form_email" form="form_login">Email</label>
-        </div>
-        <div class="col-9">
-            <textarea class="text" rows="1" maxlength="33" id="form_email" form="form_login">email@gmail.com</textarea>
-        </div>
-    </div>
-</div>
-<div class="password">
-    <div class="row">
-        <div class="col-3">
-            <label for="form_password" form="form_login">Password</label>
-        </div>
-        <div class="col-9">
-            <textarea class="text" rows="1"  maxlength="25" id="form_password" form="form_login">********</textarea>
-        </div>
-    </div>
+<div class="dflex mbottom">
+  <h1 class="dinline">Log in</h1>
+  <a class="mleft" href="{% url 'signup' %}">Sign up</a>
 </div>
 
-<div class="login">
-    <div class="row">
-        <div class="col-3"></div>
-        <div class="col-9">
-            <button class="btn btn-outline-success">Log in!</button>
-        </div>
-    </div>
-</div>
+<form novalidate class="col-12" action="/login/?next={{ next_url }}" method="post">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  <button type="submit" class="btn btn-primary button_margin_top_10">Submit</button>
+</form>
 
 {% endblock %}

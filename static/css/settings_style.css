@@ -2,11 +2,11 @@ textarea {
     width: 50%;
 }
 
-div.nickname, div.email, div.password, div.repeat_password, div.current-avatar, div.change-avatar, div.save {
+div.username, div.email, div.password, div.repeat_password, div.current-avatar, div.change-avatar, div.save {
     margin: 15px auto;
 }
 
-textarea#form_nickname {
+textarea#form_username {
     border: 1px solid red;
 }
 

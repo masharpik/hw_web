@@ -4,7 +4,16 @@ from django.db.models import Count
 
 class ProfileManager(models.Manager):
     def top_of_profiles(self):
-        return Profile.objects.annotate(Count('question')).order_by('-question__count')[:5]
+        return Profile.objects.annotate(Count('answer')).order_by('-answer__count')[:5]
+    
+    def existence_username(self, username):
+        return User.objects.filter(username=username).exists()
+    
+    def get_user_by_id(self, user_id):
+        return User.objects.get(pk=user_id)
+    
+    def get_profile_by_user_id(self, user_id):
+        return Profile.objects.get(user_id=user_id)    
 
 
 class VoteQuestionManager(models.Manager):
@@ -33,13 +42,7 @@ class QuestionManager(models.Manager):
         return Question.objects.all().order_by('datetime')
 
     def get_hot_questions(self):
-        # q = Question.objects.all()
-        # answer = [question for question in q]
-        # answer.sort(key=lambda x: x.get_likes_count(), reverse=True)
-        # return answer[a:b]
-        return Question.objects.order_by('-answer__count').annotate(Count('answer'))
-        # return Question.objects.order_by('-votequestion__likes_count')[a:b].annotate(likes_count=Count('votequestion'))
-        # return Question.objects.annotate(likes_count=Count('votequestion')).order_by('likes_count')[a:b]
+        return Question.objects.annotate(Count('answer')).order_by('-answer__count')
 
     def get_curr_count(self):
         return Question.objects.all().count()

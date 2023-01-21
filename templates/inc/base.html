@@ -32,24 +32,55 @@
 
     <div class="ui-zone rblock hcenter">
       <div class="create">
-        <button class="btn btn-success">ASK!</button>
+        <a href="{%  url 'ask' %}">
+          <button class="btn btn-outline-success">ASK!</button>
+        </a>
       </div>
+
       <div class="user-data">
-        <div class="avatar fl">
-          <img src="{% static 'img/default_avatar.jpeg' %}" alt=""/>
-        </div>
-        <div class="fl">
-          <p class="nickname">Mr. Leshiy</p>
-          <div class="authorization">
-            <a class="r" href="#">settings</a>
-            <a class="l" href="#">log out</a>
+
+        {% if curr_user.is_authenticated %}
+          <div class="avatar fl">
+            <img src="{% static 'img/default_avatar.jpeg' %}" alt=""/>
           </div>
-        </div>
+
+          <div class="fl">
+            <p class="username">{{curr_user.username}}</p>
+            <div class="authorization">
+              <a class="r" href="{% url 'settings' %}">settings</a>
+              <a class="l" href="{% url 'logout' %}?next={{ request.get_full_path }}">log out</a>
+            </div>
+          </div>
+        {% else %}
+          <div class="avatar fl">
+            <img src="{% static 'img/default_avatar.jpeg' %}" alt=""/>
+          </div>
+
+          <div class="fl">
+            <p class="username">INCOGNITO</p>
+            <div class="authorization">
+              {% if curr_url == 'signup' %}
+                <a class="r" href="#">sign up</a>
+              {% else %}
+                <a class="r" href="{% url 'signup' %}">sign up</a>
+              {% endif %}
+
+              {% if curr_url == 'login' %}
+                <a class="l" href="#">log in</a>
+              {% else %}
+
+                {% if curr_url == 'signup' %}
+                  <a class="l" href="{% url 'login' %}">log in</a>
+                {% else %}
+                  <a class="l" href="{% url 'login' %}?next={{ request.get_full_path }}">log in</a>
+                {% endif %}
+
+              {% endif %}
+              </div>
+          </div>
+        {% endif %}
       </div>
     </div>
-
-
-
     </div>
   </nav>
 
@@ -75,6 +106,7 @@
               <a class="tag" id="tag-{{forloop.counter}}" href="{% url 'tag' tag_name=some_tag.name %}">{{some_tag.name}}</a>
             {% endfor %}
           </div>
+
           <div class="members">
             <h2>Best Members</h2>
             {% for some_member in members %}

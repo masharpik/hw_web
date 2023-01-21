@@ -126,7 +126,7 @@ nav .avatar, .logo {
     margin: 20px 40px 30px;
 }
 
-.user-data .nickname {
+.user-data .username {
     color:antiquewhite;
     margin-bottom: 0;
 }
@@ -137,7 +137,7 @@ nav .avatar, .logo {
     margin: auto 5px;
 }
 
-.nickname {
+.username {
     font-family: Georgia, 'Times New Roman', Times, serif;
     font-size: 1.1em;
 }

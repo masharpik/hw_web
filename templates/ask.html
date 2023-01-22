@@ -1,9 +1,9 @@
 {% extends "inc/base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block links %}
 
-<link href="{% static 'css/ask_style.css' %}" rel="stylesheet">
 <link href="{% static 'css/input_form_style.css' %}" rel="stylesheet">
 
 {% endblock %}
@@ -11,47 +11,10 @@
 {% block content %}
 
 <h1>New Question</h1>
-<p class="error">Error: incorrect format of writing tags</p>
-<form class="form" id="form_new_question"></form>
-
-<div class="title">
-    <div class="row">
-        <div class="col-3">
-            <label for="form_title" form="form_new_question">Title</label>
-        </div>
-        <div class="col-9">
-            <textarea class="text" rows="1" maxlength="33" id="form_title" form="form_new_question">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Neque, inventore.</textarea>
-        </div>
-    </div>
-</div>
-<div class="text">
-    <div class="row">
-        <div class="col-3">
-            <label for="form_text" form="form_new_question">Text</label>
-        </div>
-        <div class="col-9">
-            <textarea class="text" rows="14" maxlength="500" id="form_text" form="form_new_question">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minima voluptatibus provident iusto velit est sed. Facere debitis ab incidunt ut enim eligendi, eveniet iste voluptatum animi quo alias, consequuntur optio cupiditate nulla tempora quisquam. Temporibus natus deserunt delectus, pariatur atque quisquam aliquam quidem repudiandae fugit impedit accusamus dicta ipsam blanditiis.</textarea>
-        </div>
-    </div>
-</div>
-<div class="tags">
-    <div class="row">
-        <div class="col-3">
-            <label for="form_tags" form="form_new_question">Tags</label>
-        </div>
-        <div class="col-9">
-            <textarea class="text" rows="1"  maxlength="33" id="form_tags" form="form_new_question">ruby rubocop family</textarea>
-        </div>
-    </div>
-</div>
-
-<div class="ask">
-    <div class="row">
-        <div class="col-3"></div>
-        <div class="col-9">
-            <button class="btn btn-success">ASK!</button>
-        </div>
-    </div>
-</div>
+<form novalidate class="form" id="form_new_question" action="/ask/" method="post">
+    {% csrf_token %}
+    {% bootstrap_form ask_form %}
+    <button class="btn btn-success">ASK!</button>
+</form>
 
 {% endblock %}

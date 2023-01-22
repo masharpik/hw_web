@@ -20,7 +20,7 @@
           {{ question.text }}
         </div>
   
-        <a class="count-answers" href="{% url 'question' question_id=question.id %}">answers ({{ question.get_count_answer }})</a>
+        <a class="count-answers" href="{% url 'question' question_id=question.id %}">answers ({{ question.get_count_answers }})</a>
         <span>Tags: </span>
         <div class="question-tags dinline">
           {% for tag in question.get_tags %}

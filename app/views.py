@@ -92,11 +92,24 @@ def tag(request: HttpRequest, tag_name: str):
 
 @login_required
 def ask(request: HttpRequest):
+
+    if request.method == "POST":
+        title, text, tags = request.POST['title'], request.POST['text'], request.POST['tags']
+        ask_form = AskForm(request.POST, initial={"title": title, "text": text, "tags": tags})
+        if ask_form.is_valid():
+            new_question = ask_form.save(Profile.objects.get_profile_by_user_id(request.user.id).id)
+            if new_question:
+                return redirect('question', question_id=new_question.id)
+            else:
+                ask_form.add_error("Question saving error!")
+    elif request.method == "GET":
+        ask_form = AskForm()
+
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
 
     context = {'curr_user': request.user, 'request': request, 'curr_url': 'ask', 'tags': TAGS,
-        'members': MEMBERS}
+        'members': MEMBERS, 'ask_form': ask_form}
     return render(request, 'ask.html', context=context)
 
 
@@ -120,9 +133,28 @@ def question(request: HttpRequest, question_id: int):
     if not page and len(list(ANSWERS)) != 0:
         return HttpResponse(status=404)
 
+    if request.method == "POST":
+        text = request.POST['text']
+        answer_form = AnswerForm(request.POST, initial={'text': text})
+        if answer_form.is_valid():
+            new_answer = answer_form.save(question_id,
+                Profile.objects.get_profile_by_user_id(request.user.id).id)
+            if new_answer:
+                answers_id = [answer.id for answer in ANSWERS]
+                need_page = answers_id.index(new_answer.id) // 5
+
+                response = redirect('question', question_id)
+                response['Location'] += f'?page={need_page}' + f'#answer-{new_answer.id}'
+                return response
+            else:
+                answer_form.add_error("User saving error!")
+
+    elif request.method == "GET":
+        answer_form = AnswerForm()
+
     context = {'curr_user': request.user, 'request': request, 'question': question_item, 'id': question_id,
         'answers': page.object_list, 'paginator': paginator_data, 'curr_url': 'question', 'tags': TAGS,
-        'members': MEMBERS}
+        'members': MEMBERS, 'answer_form': answer_form}
     return render(request, 'question.html', context=context)
 
 
@@ -190,9 +222,11 @@ def settings(request: HttpRequest):
 
         settings_user_form = SettingsUserForm(request.POST, instance=user)
         settings_profile_form = SettingsProfileForm(request.POST, instance=profile)
+        
         if settings_user_form.is_valid() and settings_profile_form.is_valid():
             curr_username = request.user.username
             curr_password = request.POST['password']
+            
             test_auth_user = auth.authenticate(request=request, username=curr_username, password=curr_password)
             if test_auth_user is None:
                 settings_user_form.add_error(field='password', error="The old password is incorrect!")
@@ -216,8 +250,8 @@ def settings(request: HttpRequest):
     elif request.method == "GET":
         user_id = request.user.id
         user, profile = Profile.objects.get_user_by_id(user_id), Profile.objects.get_profile_by_user_id(user_id)
-        settings_user_form = SettingsUserForm(initial={'username': user.username, 'email': user.email})
-        settings_profile_form = SettingsProfileForm(initial={'avatar': profile.avatar})
+        settings_user_form = SettingsUserForm(instance=user)
+        settings_profile_form = SettingsProfileForm(instance=profile)
 
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
@@ -226,6 +260,7 @@ def settings(request: HttpRequest):
         'curr_url': 'settings', 'tags': TAGS, 'members': MEMBERS,
         'form_user': settings_user_form, 'form_profile': settings_profile_form}
     return render(request, 'settings.html', context=context)
+
 
 def logout(request: HttpRequest):
     next_url = request.GET.get('next', 'index')

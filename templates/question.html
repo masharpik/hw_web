@@ -1,5 +1,6 @@
 {% extends "inc/base.html" %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block links %}
 
@@ -23,8 +24,9 @@
 
 <div class="bborder"></div>
 
-<form class="enter-answer">
-  <textarea placeholder="Enter your answer here..." id="new_answer"></textarea>
+<form novalidate class="enter-answer" action="{% url 'question' question_id=id %}" method="post">
+  {% csrf_token %}
+  {% bootstrap_form answer_form %}
   <button class="dblock mleft mbottom btn btn-success">Answer</button>
 </form>
 

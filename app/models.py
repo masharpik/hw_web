@@ -39,7 +39,7 @@ class TagManager(models.Manager):
 
 class QuestionManager(models.Manager):
     def get_new_questions(self):
-        return Question.objects.all().order_by('datetime')
+        return Question.objects.all().order_by('-datetime')
 
     def get_hot_questions(self):
         return Question.objects.annotate(Count('answer')).order_by('-answer__count')
@@ -52,8 +52,7 @@ class QuestionManager(models.Manager):
 
 
 class AnswerManager(models.Manager):
-    def get_answers_by_question(self, question_id):
-        pass
+    pass
 
 
 class Tag(models.Model):
@@ -96,7 +95,7 @@ class Question(models.Model):
         return Question.objects.filter(votequestion__question=self,
             votequestion__is_like=False).count()
     
-    def get_count_answer(self):
+    def get_count_answers(self):
         return Question.objects.filter(answer__question=self).count()
     
     def get_tags(self):

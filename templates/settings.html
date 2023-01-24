@@ -15,9 +15,7 @@
 
 <form novalidate class="form" id="form_settings" action="/profile/edit/" method="post">
   {% csrf_token %}
-  {% bootstrap_form form_user %}
-  {% bootstrap_form form_profile %}
-    
+  {% bootstrap_form form %}    
   <button class="btn btn-outline-success">Save</button>
 </form>
 

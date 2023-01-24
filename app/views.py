@@ -1,5 +1,6 @@
 from django.http import HttpResponse, HttpRequest, HttpResponseBadRequest
 from django.shortcuts import render, redirect
+from askme.settings import LOGIN_URL
 from . import models
 from django.core.paginator import Paginator
 from app.models import *
@@ -95,13 +96,13 @@ def ask(request: HttpRequest):
 
     if request.method == "POST":
         title, text, tags = request.POST['title'], request.POST['text'], request.POST['tags']
-        ask_form = AskForm(request.POST, initial={"title": title, "text": text, "tags": tags})
+        profile_id = Profile.objects.get_profile_by_user_id(request.user.id).id
+        ask_form = AskForm(request.POST, profile_id=profile_id, initial={"title": title, "text": text, "tags": tags})
         if ask_form.is_valid():
-            new_question = ask_form.save(Profile.objects.get_profile_by_user_id(request.user.id).id)
+            new_question = ask_form.save()
             if new_question:
                 return redirect('question', question_id=new_question.id)
-            else:
-                ask_form.add_error("Question saving error!")
+
     elif request.method == "GET":
         ask_form = AskForm()
 
@@ -134,27 +135,31 @@ def question(request: HttpRequest, question_id: int):
         return HttpResponse(status=404)
 
     if request.method == "POST":
+        if not request.user.is_authenticated:
+            response = redirect(LOGIN_URL)
+            response['Location'] += f'?next={request.get_full_path()}'
+            return response
+
         text = request.POST['text']
-        answer_form = AnswerForm(request.POST, initial={'text': text})
+        profile_id = Profile.objects.get_profile_by_user_id(request.user.id).id
+        answer_form = AnswerForm(request.POST, question_id=question_id, profile_id=profile_id, initial={'text': text})
         if answer_form.is_valid():
-            new_answer = answer_form.save(question_id,
-                Profile.objects.get_profile_by_user_id(request.user.id).id)
+            new_answer = answer_form.save()
             if new_answer:
-                answers_id = [answer.id for answer in ANSWERS]
-                need_page = answers_id.index(new_answer.id) // 5
+                ANSWERS = question_item.get_answers()
+                id_answers = list(question_item.get_id_answers())
+                need_page = id_answers.index((new_answer.id,)) // 5
 
                 response = redirect('question', question_id)
                 response['Location'] += f'?page={need_page}' + f'#answer-{new_answer.id}'
                 return response
-            else:
-                answer_form.add_error("User saving error!")
 
     elif request.method == "GET":
         answer_form = AnswerForm()
 
     context = {'curr_user': request.user, 'request': request, 'question': question_item, 'id': question_id,
         'answers': page.object_list, 'paginator': paginator_data, 'curr_url': 'question', 'tags': TAGS,
-        'members': MEMBERS, 'answer_form': answer_form}
+        'members': MEMBERS, 'answer_form': answer_form, 'input_page': input_page}
     return render(request, 'question.html', context=context)
 
 
@@ -164,15 +169,13 @@ def login(request: HttpRequest):
 
     if request.method == "POST":
 
-        login_form = LoginForm(request.POST)
+        login_form = LoginForm(request.POST, request=request)
 
         if login_form.is_valid():
             user = auth.authenticate(request=request, **login_form.cleaned_data)
             if user is not None:
                 auth_login(request, user)
                 return redirect(next_url)
-            else:
-                login_form.add_error(field=None, error="Wrong username or password!")
 
     elif request.method == "GET":
         login_form = LoginForm()
@@ -188,28 +191,22 @@ def login(request: HttpRequest):
 def signup(request: HttpRequest):
 
     if request.method == "POST":
+        signup_form = SignUpForm(request.POST)
 
-        signup_user_form = SignUpUserForm(request.POST)
-        signup_profile_form = SignUpProfileForm(request.POST)
-
-        if signup_user_form.is_valid() and signup_profile_form.is_valid():
-            user = signup_user_form.save()
-            profile = signup_profile_form.save(user)
-            if user and profile:
+        if signup_form.is_valid():
+            user = signup_form.save()
+            if user:
                 auth_login(request, user)
                 return redirect('index')
-            else:
-                signup_user_form.add_error("User saving error!")
 
     elif request.method == "GET":
-        signup_user_form = SignUpUserForm()
-        signup_profile_form = SignUpProfileForm()
+        signup_form = SignUpForm()
 
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
 
     context = {'curr_user': request.user, 'curr_url': 'signup', 'request': request,
-        'form_user': signup_user_form, 'form_profile': signup_profile_form, 'tags': TAGS, 'members': MEMBERS}
+        'form': signup_form, 'tags': TAGS, 'members': MEMBERS}
     return render(request, 'signup.html', context=context)
 
 
@@ -217,48 +214,24 @@ def signup(request: HttpRequest):
 def settings(request: HttpRequest):
 
     if request.method == "POST":
-        user_id = request.user.id
-        user, profile = Profile.objects.get_user_by_id(user_id), Profile.objects.get_profile_by_user_id(user_id)
+        curr_username, email, avatar = request.user.username, request.POST['email'], request.POST['avatar']
 
-        settings_user_form = SettingsUserForm(request.POST, instance=user)
-        settings_profile_form = SettingsProfileForm(request.POST, instance=profile)
-        
-        if settings_user_form.is_valid() and settings_profile_form.is_valid():
-            curr_username = request.user.username
-            curr_password = request.POST['password']
-            
-            test_auth_user = auth.authenticate(request=request, username=curr_username, password=curr_password)
-            if test_auth_user is None:
-                settings_user_form.add_error(field='password', error="The old password is incorrect!")
-            else:
-                new_user = settings_user_form.update(user)
-                new_profile = settings_profile_form.update(user)
+        settings_form = SettingsForm(request.POST, request=request, initial={'username': curr_username, 'email': email, 'avatar': avatar})
 
-                if new_user and new_profile:
-                    new_password = request.POST['new_password']
-                    if new_password != '':
-                        test_auth_user = auth.authenticate(request=request, username=new_user.username, password=new_password)
-                    
-                    if test_auth_user is not None:
-                        auth_login(request, test_auth_user)
-                    else:
-                        settings_user_form.add_error(field=None, error="User authenticating error!")
-                else:
-                    settings_user_form.add_error(field=None, error="User saving error!")
-            
+        if settings_form.is_valid():
+            settings_form.update()
 
     elif request.method == "GET":
         user_id = request.user.id
         user, profile = Profile.objects.get_user_by_id(user_id), Profile.objects.get_profile_by_user_id(user_id)
-        settings_user_form = SettingsUserForm(instance=user)
-        settings_profile_form = SettingsProfileForm(instance=profile)
+        settings_form = SettingsForm(initial={'username': user.username, 'email': user.email, 'avatar': profile.avatar})
 
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
 
     context = {'curr_user': request.user, 'request': request,
         'curr_url': 'settings', 'tags': TAGS, 'members': MEMBERS,
-        'form_user': settings_user_form, 'form_profile': settings_profile_form}
+        'form': settings_form}
     return render(request, 'settings.html', context=context)
 
 

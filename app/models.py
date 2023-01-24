@@ -103,6 +103,9 @@ class Question(models.Model):
     
     def get_answers(self):
         return self.answer_set.all()
+    
+    def get_id_answers(self):
+        return self.answer_set.values_list('id')
 
 
 class Answer(models.Model):

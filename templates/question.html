@@ -24,7 +24,7 @@
 
 <div class="bborder"></div>
 
-<form novalidate class="enter-answer" action="{% url 'question' question_id=id %}" method="post">
+<form novalidate class="enter-answer" action="{% url 'question' question_id=id %}?page={{input_page}}" method="post">
   {% csrf_token %}
   {% bootstrap_form answer_form %}
   <button class="dblock mleft mbottom btn btn-success">Answer</button>

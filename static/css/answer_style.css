@@ -17,6 +17,13 @@
     pointer-events:none;
 }
 
+.item-text {
+    position: relative;
+    width: 90%;
+    word-wrap: break-word;
+    padding: 5px
+}
+
 a.count-answers {
     pointer-events: none;
     cursor: default;

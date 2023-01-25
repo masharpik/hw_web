@@ -18,6 +18,12 @@
 {% for question in questions %}
   {% include 'inc/question_item.html' %}
 {% endfor %}
+<script>
+  var questions = document.getElementsByClassName('item-text');
+  for (var i = 0; i < questions.length; i++) {
+    questions[i].classList.add("question-text");
+  }
+</script>
 
 {% include 'inc/paginator.html' %}
 

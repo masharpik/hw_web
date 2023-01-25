@@ -25,6 +25,13 @@ h1 + .mleft {
     object-fit: cover;
 }
 
+.item-text {
+    position: relative;
+    width: 90%;
+    word-wrap: break-word;
+    padding: 5px
+}
+
 .avatar {
     margin: 18px 0 18px 22px;
 }

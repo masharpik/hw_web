@@ -28,7 +28,7 @@ class Command(BaseCommand):
         iter = 0
         for i in profiles:
             for j in questions:
-                vote_question = VoteQuestion(is_like=bool(iter))
+                vote_question = VoteQuestion()
                 vote_question.profile = i
                 vote_question.question = j
                 objs.append(vote_question)
@@ -49,7 +49,7 @@ class Command(BaseCommand):
         iter = 0
         for i in profiles:
             for j in answers:
-                vote_answer = VoteAnswer(is_like=bool(iter))
+                vote_answer = VoteAnswer()
                 vote_answer.profile = i
                 vote_answer.answer = j
                 objs.append(vote_answer)

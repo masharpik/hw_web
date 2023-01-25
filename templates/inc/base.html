@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sticky Footer Navbar Template · Bootstrap v5.2</title>
-
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
 
     <link href="{% static 'css/base_style.css' %}" rel="stylesheet">
@@ -129,5 +129,11 @@
     <span class="text-muted">Place sticky footer content here.</span>
   </div>
 </footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+  var csrftoken = '{{ csrf_token }}';
+</script>
   </body>
 </html>

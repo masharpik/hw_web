@@ -9,6 +9,9 @@ from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.core.files.storage import FileSystemStorage
+from django.views.decorators.http import require_http_methods
+from django.http import JsonResponse
+
 
 def get_paginator_data(list_data, per_page, curr_page):
     paginator = Paginator(list_data, per_page)
@@ -46,9 +49,12 @@ def index(request: HttpRequest):
     MEMBERS = Profile.objects.top_of_profiles()
     curr_user = request.user
     curr_profile = curr_user.profile if not curr_user.is_anonymous else None
+    vote_questions = curr_profile.get_vote_questions() if curr_profile else []
+    vote_answers = curr_profile.get_vote_answers() if curr_profile else []
 
     context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'questions': page.object_list, 'request': request,
-        'paginator': paginator_data, 'curr_url': 'index', 'tags': TAGS, 'members': MEMBERS}
+        'paginator': paginator_data, 'curr_url': 'index', 'tags': TAGS, 'members': MEMBERS, 'vote_questions': vote_questions,
+        'vote_answers': vote_answers}
     return render(request, 'index.html', context=context)
 
 
@@ -67,9 +73,12 @@ def hot(request: HttpRequest):
     MEMBERS = Profile.objects.top_of_profiles()
     curr_user = request.user
     curr_profile = curr_user.profile if not curr_user.is_anonymous else None
+    vote_questions = curr_profile.get_vote_questions() if curr_profile else []
+    vote_answers = curr_profile.get_vote_answers() if curr_profile else []
 
     context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'questions': page.object_list, 'request': request,
-        'paginator': paginator_data, 'curr_url': 'hot', 'tags': TAGS, 'members': MEMBERS}
+        'paginator': paginator_data, 'curr_url': 'hot', 'tags': TAGS, 'members': MEMBERS, 'vote_questions': vote_questions,
+        'vote_answers': vote_answers}
     return render(request, 'hot.html', context=context)
 
 
@@ -92,9 +101,12 @@ def tag(request: HttpRequest, tag_name: str):
     MEMBERS = Profile.objects.top_of_profiles()
     curr_user = request.user
     curr_profile = curr_user.profile if not curr_user.is_anonymous else None
+    vote_questions = curr_profile.get_vote_questions() if curr_profile else []
+    vote_answers = curr_profile.get_vote_answers() if curr_profile else []
 
     context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'tag': tag_name, 'request': request, 'questions': page.object_list,
-        'paginator': paginator_data, 'curr_url': 'tag', 'tags': TAGS, 'members': MEMBERS}
+        'paginator': paginator_data, 'curr_url': 'tag', 'tags': TAGS, 'members': MEMBERS, 'vote_questions': vote_questions,
+        'vote_answers': vote_answers}
     return render(request, 'tag.html', context=context)
 
 
@@ -168,10 +180,13 @@ def question(request: HttpRequest, question_id: int):
     
     curr_user = request.user
     curr_profile = curr_user.profile if not curr_user.is_anonymous else None
+    vote_questions = curr_profile.get_vote_questions() if curr_profile else []
+    vote_answers = curr_profile.get_vote_answers() if curr_profile else []
 
     context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'request': request, 'question': question_item, 'id': question_id,
         'answers': page.object_list, 'paginator': paginator_data, 'curr_url': 'question', 'tags': TAGS,
-        'members': MEMBERS, 'answer_form': answer_form, 'input_page': input_page}
+        'members': MEMBERS, 'answer_form': answer_form, 'input_page': input_page, 'vote_questions': vote_questions,
+        'vote_answers': vote_answers}
     return render(request, 'question.html', context=context)
 
 
@@ -261,3 +276,56 @@ def logout(request: HttpRequest):
 
     auth_logout(request)
     return redirect(next_url)
+
+
+@require_http_methods(["POST"])
+def like_question(request: HttpRequest):
+    if not request.user.is_authenticated:
+        print("HELL")
+        return JsonResponse({'status': 'not_auth'})
+    try:
+        question_id = int(request.POST.get('question_id', -1))
+        islike = int(request.POST.get('islike', 0))
+
+        print("HELL")
+        some_question = Question.objects.get_question_by_id(question_id)
+
+        profile_id = request.user.profile.id
+        
+        if islike == 0:
+            VoteQuestion.objects.create(question_id=question_id, profile_id=profile_id)
+            islike = 1
+        elif islike == 1:
+            vote = VoteQuestion.objects.get(question_id=question_id, profile_id=profile_id)
+            vote.delete()
+            islike = 0
+
+        return JsonResponse({'status': 'ok', 'islike': islike, 'likes_count': some_question.get_likes_count()})
+    except:
+        return JsonResponse({'status': 'error'})
+
+
+@require_http_methods(["POST"])
+def like_answer(request: HttpRequest):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status': 'not_auth'})
+    try:
+        answer_id = int(request.POST.get('answer_id', -1))
+        islike = int(request.POST.get('islike', 0))
+
+        some_answer = Answer.objects.get_answer_by_id(answer_id)
+
+        profile_id = request.user.profile.id
+        
+        if islike == 0:
+            VoteAnswer.objects.create(answer_id=answer_id, profile_id=profile_id)
+            islike = 1
+        elif islike == 1:
+            print("HELL")
+            vote = VoteAnswer.objects.get(answer_id=answer_id, profile_id=profile_id)
+            vote.delete()
+            islike = 0
+
+        return JsonResponse({'status': 'ok', 'islike': islike, 'likes_count': some_answer.get_likes_count()})
+    except:
+        return JsonResponse({'status': 'error'})

@@ -52,7 +52,8 @@ class QuestionManager(models.Manager):
 
 
 class AnswerManager(models.Manager):
-    pass
+    def get_answer_by_id(self, id):
+        return Answer.objects.get(pk=id)
 
 
 class Tag(models.Model):
@@ -73,6 +74,14 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"Profile {self.user.username}"
+    
+    def get_vote_questions(self):
+        questions = [question[0] for question in list(VoteQuestion.objects.filter(profile=self).values_list('question'))]
+        return questions
+    
+    def get_vote_answers(self):
+        answers = [answer[0] for answer in list(VoteAnswer.objects.filter(profile=self).values_list('answer'))]
+        return answers
 
 
 class Question(models.Model):
@@ -88,12 +97,7 @@ class Question(models.Model):
         return f"Question {self.title}"
 
     def get_likes_count(self):
-        return Question.objects.filter(votequestion__question=self,
-            votequestion__is_like=True).count()
-    
-    def get_dislikes_count(self):
-        return Question.objects.filter(votequestion__question=self,
-            votequestion__is_like=False).count()
+        return Question.objects.filter(votequestion__question=self).count()
     
     def get_count_answers(self):
         return Question.objects.filter(answer__question=self).count()
@@ -120,12 +124,7 @@ class Answer(models.Model):
         return f"Answer {self.text}"
 
     def get_likes_count(self):
-        return Answer.objects.filter(voteanswer__answer=self,
-            voteanswer__is_like=True).count()
-    
-    def get_dislikes_count(self):
-        return Answer.objects.filter(voteanswer__answer=self,
-            voteanswer__is_like=False).count()
+        return Answer.objects.filter(voteanswer__answer=self).count()
     
     def get_correctness(self):
         return self.correctness
@@ -141,8 +140,6 @@ class VoteQuestion(models.Model):
     class Meta:
         unique_together = ['question', 'profile']
 
-    is_like = models.BooleanField()
-
     objects = VoteQuestionManager()
 
 
@@ -155,7 +152,5 @@ class VoteAnswer(models.Model):
 
     class Meta:
         unique_together = ['answer', 'profile']
-
-    is_like = models.BooleanField()
 
     objects = VoteAnswerManager()

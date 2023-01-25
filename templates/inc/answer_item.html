@@ -4,10 +4,21 @@
     <div class="row">
       <div class="col-3">
         <div class="feedback fl">
-          <button class="swipe dblock"><img class="swipe-up" src="{% static 'img/like.png' %}" alt=""/></button>
-          <p class="score">{{ answer.get_likes_count }}</p>
-          <button class="swipe dblock"><img class="swipe-down" src="{% static 'img/dislike.png' %}" alt=""/></button>
-          <p class="score">{{ answer.get_dislikes_count }}</p>
+
+          {% if answer.id in vote_answers %}
+            <p class="swipe answer_swipe dblock" id="p_answer_{{ answer.id }}" data-id="{{ answer.id }}" data-islike="1">
+              <input type="image" class="swipe-up" id="image_answer_{{ answer.id }}" src="{% static 'img/pressed_like.png' %}" alt=""/>
+            </p>
+
+            <p class="score" id="score_answer_{{ answer.id }}">{{ answer.get_likes_count }}</p>
+          {% else %}
+            <p class="swipe answer_swipe dblock" id="p_answer_{{ answer.id }}" data-id="{{ answer.id }}" data-islike="0">
+              <input type="image" class="swipe-up" id="image_answer_{{ answer.id }}" src="{% static 'img/unpressed_like.png' %}" alt=""/>
+            </p>
+
+            <p class="score" id="score_answer_{{ answer.id }}">{{ answer.get_likes_count }}</p>
+          {% endif %}
+
         </div>
         <div class="avatar fl">
           {% if answer.profile.avatar %}

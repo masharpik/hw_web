@@ -6,6 +6,7 @@
 .answer .avatar {
     width: 70px;
     height: 70px;
+    margin-top: 35px;
 }
 
 h1 + .mleft {
@@ -18,7 +19,7 @@ h1 + .mleft {
     padding: 0;
 }
 
-.question img, .answer img {
+.question input.swipe-up, .answer input.swipe-up {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -41,6 +42,10 @@ h1 + .mleft {
     font-weight: bold;
     font-size: 1.5em;
     margin: 0;
+}
+
+.feedback {
+    margin: 27px 0 18px 22px;
 }
 
 .dblock {

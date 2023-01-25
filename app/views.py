@@ -8,6 +8,7 @@ from app.forms import *
 from django.contrib import auth
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.core.files.storage import FileSystemStorage
 
 def get_paginator_data(list_data, per_page, curr_page):
     paginator = Paginator(list_data, per_page)
@@ -43,8 +44,10 @@ def index(request: HttpRequest):
     
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
+    curr_user = request.user
+    curr_profile = curr_user.profile if not curr_user.is_anonymous else None
 
-    context = {'curr_user': request.user, 'questions': page.object_list, 'request': request,
+    context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'questions': page.object_list, 'request': request,
         'paginator': paginator_data, 'curr_url': 'index', 'tags': TAGS, 'members': MEMBERS}
     return render(request, 'index.html', context=context)
 
@@ -62,8 +65,10 @@ def hot(request: HttpRequest):
     
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
+    curr_user = request.user
+    curr_profile = curr_user.profile if not curr_user.is_anonymous else None
 
-    context = {'curr_user': request.user, 'questions': page.object_list, 'request': request,
+    context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'questions': page.object_list, 'request': request,
         'paginator': paginator_data, 'curr_url': 'hot', 'tags': TAGS, 'members': MEMBERS}
     return render(request, 'hot.html', context=context)
 
@@ -85,8 +90,10 @@ def tag(request: HttpRequest, tag_name: str):
     
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
+    curr_user = request.user
+    curr_profile = curr_user.profile if not curr_user.is_anonymous else None
 
-    context = {'curr_user': request.user, 'tag': tag_name, 'request': request, 'questions': page.object_list,
+    context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'tag': tag_name, 'request': request, 'questions': page.object_list,
         'paginator': paginator_data, 'curr_url': 'tag', 'tags': TAGS, 'members': MEMBERS}
     return render(request, 'tag.html', context=context)
 
@@ -108,8 +115,10 @@ def ask(request: HttpRequest):
 
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
+    curr_user = request.user
+    curr_profile = curr_user.profile if not curr_user.is_anonymous else None
 
-    context = {'curr_user': request.user, 'request': request, 'curr_url': 'ask', 'tags': TAGS,
+    context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'request': request, 'curr_url': 'ask', 'tags': TAGS,
         'members': MEMBERS, 'ask_form': ask_form}
     return render(request, 'ask.html', context=context)
 
@@ -156,8 +165,11 @@ def question(request: HttpRequest, question_id: int):
 
     elif request.method == "GET":
         answer_form = AnswerForm()
+    
+    curr_user = request.user
+    curr_profile = curr_user.profile if not curr_user.is_anonymous else None
 
-    context = {'curr_user': request.user, 'request': request, 'question': question_item, 'id': question_id,
+    context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'request': request, 'question': question_item, 'id': question_id,
         'answers': page.object_list, 'paginator': paginator_data, 'curr_url': 'question', 'tags': TAGS,
         'members': MEMBERS, 'answer_form': answer_form, 'input_page': input_page}
     return render(request, 'question.html', context=context)
@@ -182,8 +194,10 @@ def login(request: HttpRequest):
     
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
+    curr_user = request.user
+    curr_profile = curr_user.profile if not curr_user.is_anonymous else None
 
-    context = {'curr_user': request.user, 'request': request, 'curr_url': 'login',
+    context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'request': request, 'curr_url': 'login',
         'form': login_form, 'next_url': next_url, 'tags': TAGS, 'members': MEMBERS}
     return render(request, 'login.html', context=context)
 
@@ -191,9 +205,10 @@ def login(request: HttpRequest):
 def signup(request: HttpRequest):
 
     if request.method == "POST":
-        signup_form = SignUpForm(request.POST)
+        signup_form = SignUpForm(request.POST, request.FILES, request=request)
 
         if signup_form.is_valid():
+
             user = signup_form.save()
             if user:
                 auth_login(request, user)
@@ -204,8 +219,10 @@ def signup(request: HttpRequest):
 
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
+    curr_user = request.user
+    curr_profile = curr_user.profile if not curr_user.is_anonymous else None
 
-    context = {'curr_user': request.user, 'curr_url': 'signup', 'request': request,
+    context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'curr_url': 'signup', 'request': request,
         'form': signup_form, 'tags': TAGS, 'members': MEMBERS}
     return render(request, 'signup.html', context=context)
 
@@ -214,12 +231,14 @@ def signup(request: HttpRequest):
 def settings(request: HttpRequest):
 
     if request.method == "POST":
-        curr_username, email, avatar = request.user.username, request.POST['email'], request.POST['avatar']
+        curr_username, email = request.user.username, request.POST['email']
 
-        settings_form = SettingsForm(request.POST, request=request, initial={'username': curr_username, 'email': email, 'avatar': avatar})
+        profile = Profile.objects.get_profile_by_user_id(request.user.id)
+        avatar = profile.avatar
 
+        settings_form = SettingsForm(request.POST, request.FILES, request=request, initial={'username': curr_username, 'email': email})
         if settings_form.is_valid():
-            settings_form.update()
+            settings_form.save()
 
     elif request.method == "GET":
         user_id = request.user.id
@@ -228,8 +247,10 @@ def settings(request: HttpRequest):
 
     TAGS = Tag.objects.top_of_tags()
     MEMBERS = Profile.objects.top_of_profiles()
+    curr_user = request.user
+    curr_profile = curr_user.profile if not curr_user.is_anonymous else None
 
-    context = {'curr_user': request.user, 'request': request,
+    context = {'curr_user': curr_user, 'curr_profile': curr_profile, 'request': request,
         'curr_url': 'settings', 'tags': TAGS, 'members': MEMBERS,
         'form': settings_form}
     return render(request, 'settings.html', context=context)

@@ -10,7 +10,11 @@
           <p class="score">{{ answer.get_dislikes_count }}</p>
         </div>
         <div class="avatar fl">
-          <img src="{% static 'img/default_avatar.jpeg' %}" alt=""/>
+          {% if answer.profile.avatar %}
+            <img src="{{ answer.profile.avatar.url }}" alt=""/>
+          {% else %}
+            <img src="{% static 'img/default_avatar.jpeg' %}" alt=""/>
+          {% endif %}
         </div>
       </div>
       <div class="col-9">

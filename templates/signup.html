@@ -15,7 +15,7 @@
   <a class="mleft" href="{% url 'login' %}">Login</a>
 </div>
 
-<form novalidate class="form" id="form_signup" action="/signup/" method="post">
+<form novalidate class="form" id="form_signup" action="/signup/" method="post" enctype="multipart/form-data">
   {% csrf_token %}
   {% bootstrap_form form %}
   <button class="btn btn-outline-success">Register!</button>

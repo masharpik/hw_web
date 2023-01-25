@@ -3,6 +3,8 @@ from app.models import User, Profile, Question, Tag, Answer
 from django.core.exceptions import ValidationError
 from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib import auth
+from django.core.files.storage import FileSystemStorage
+import os
 
 
 class LoginForm(forms.Form):
@@ -26,10 +28,12 @@ class SettingsForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput, label="Password confirmation")
     new_password = forms.CharField(widget=forms.PasswordInput, label="New password if need", required=False)
     password_check = forms.CharField(widget=forms.PasswordInput, label="Repeat password", required=False)
+    avatar = forms.ImageField(required=False)
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
         super(SettingsForm, self).__init__(*args, **kwargs)
+        self.fields['avatar'].widget.initial_url = "currently!"
 
     def clean_password_check(self):
         new_password = self.cleaned_data['new_password']
@@ -37,7 +41,6 @@ class SettingsForm(forms.Form):
         if password_for_checking != new_password:
             raise ValidationError("Passwords don't match!")
         return password_for_checking
-    avatar = forms.ImageField(required=False)
 
     def clean_password(self):
         username = self.cleaned_data['username']
@@ -47,7 +50,7 @@ class SettingsForm(forms.Form):
             raise ValidationError("The old password is incorrect!")
         return password
     
-    def update(self):
+    def save(self):
         data = self.cleaned_data
 
         username = data['username']
@@ -67,10 +70,27 @@ class SettingsForm(forms.Form):
             self.add_error(field=None, error="User updating error!")
             return None
 
-        profile = Profile.objects.filter(user_id=user_tmp.id).update(avatar=avatar)
-        if not profile:
-            self.add_error(field=None, error="Profile updating error!")
-            return None
+        profile = user_tmp.profile
+        prev_avatar = profile.avatar
+
+        avatar_clear = self.request.POST.get('avatar-clear', 'off')
+        if prev_avatar != 'profile_images/default_avatar.jpeg' and (self.request.FILES or avatar_clear == 'on'):
+            if os.path.isfile(f'media/{prev_avatar}'):
+                os.remove(f'media/{prev_avatar}')
+
+        if self.request.FILES:
+            avatar = self.request.FILES['avatar']
+            profile.avatar = avatar
+            profile.save()
+            if not profile:
+                self.add_error(field=None, error="Profile updating error!")
+                return None
+        elif avatar_clear == 'on':
+            profile.avatar = 'profile_images/default_avatar.jpeg'
+            profile.save()
+            if not profile:
+                self.add_error(field=None, error="Profile updating error!")
+                return None
 
         if new_password != '':
             user_tmp.set_password(new_password)
@@ -92,9 +112,15 @@ class SignUpForm(forms.Form):
     password_check = forms.CharField(label="Repeat password", widget=forms.PasswordInput)
     avatar = forms.ImageField(required=False)
     
-    def __init__(self, *args, user_id=0, **kwargs):
-        self.user_id = user_id
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super(SignUpForm, self).__init__(*args, **kwargs)
+    
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if User.objects.filter(username=username).exists():
+            raise ValidationError("Username already exists")
+        return username
     
     def clean_password_check(self):
         password = self.cleaned_data['password']
@@ -106,7 +132,6 @@ class SignUpForm(forms.Form):
     def save(self):
         data = self.cleaned_data
 
-        avatar = data['avatar']
         data.pop('avatar')
         data.pop('password_check')
 
@@ -114,11 +139,17 @@ class SignUpForm(forms.Form):
         if not user:
             self.add_error("User saving error!")
             return None
-
-        profile = Profile.objects.create(avatar=avatar, user_id=user.id)
-        if not profile:
-            self.add_error("Profile saving error!")
-            return None
+        
+        if self.request.FILES:
+            profile = Profile.objects.create(avatar=self.request.FILES['avatar'], user_id=user.id)
+            if not profile:
+                self.add_error("Profile saving error!")
+                return None
+        else:
+            profile = Profile.objects.create(user_id=user.id)
+            if not profile:
+                self.add_error("Profile saving error!")
+                return None
 
         return user
 

@@ -67,7 +67,7 @@ class Tag(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    avatar = models.ImageField(blank=True, null=True, upload_to='profile_images')
+    avatar = models.ImageField(blank=True, null=True, upload_to='profile_images', default='profile_images/default_avatar.jpeg')
 
     objects = ProfileManager()
 

@@ -17,13 +17,19 @@ class ProfileManager(models.Manager):
 
 
 class VoteQuestionManager(models.Manager):
-    def get_score_of_question(self, question_id):
-        pass
+    def get_vote_question_by_profile_and_question_id(self, question_id, profile_id):
+        return VoteQuestion.objects.get(question_id=question_id, profile_id=profile_id)
+        
+    def create_vote_question_by_profile_and_question_id(self, question_id, profile_id):
+        return VoteQuestion.objects.create(question_id=question_id, profile_id=profile_id)
 
 
 class VoteAnswerManager(models.Manager):
-    def get_score_of_answer(self, answer_id):
-        pass
+    def get_vote_answer_by_profile_and_answer_id(self, answer_id, profile_id):
+        return VoteAnswer.objects.get(answer_id=answer_id, profile_id=profile_id)
+        
+    def create_vote_answer_by_profile_and_answer_id(self, answer_id, profile_id):
+        return VoteAnswer.objects.create(answer_id=answer_id, profile_id=profile_id)
 
 
 class TagManager(models.Manager):

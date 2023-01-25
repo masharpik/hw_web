@@ -281,22 +281,20 @@ def logout(request: HttpRequest):
 @require_http_methods(["POST"])
 def like_question(request: HttpRequest):
     if not request.user.is_authenticated:
-        print("HELL")
         return JsonResponse({'status': 'not_auth'})
     try:
         question_id = int(request.POST['question_id'])
         islike = int(request.POST['islike'])
 
-        print("HELL")
         some_question = Question.objects.get_question_by_id(question_id)
 
         profile_id = request.user.profile.id
         
         if islike == 0:
-            VoteQuestion.objects.create(question_id=question_id, profile_id=profile_id)
+            VoteQuestion.objects.create_vote_question_by_profile_and_question_id(question_id, profile_id)
             islike = 1
         elif islike == 1:
-            vote = VoteQuestion.objects.get(question_id=question_id, profile_id=profile_id)
+            vote = VoteQuestion.objects.get_vote_question_by_profile_and_question_id(question_id, profile_id)
             vote.delete()
             islike = 0
 
@@ -318,10 +316,10 @@ def like_answer(request: HttpRequest):
         profile_id = request.user.profile.id
         
         if islike == 0:
-            VoteAnswer.objects.create(answer_id=answer_id, profile_id=profile_id)
+            VoteAnswer.objects.create_vote_answer_by_profile_and_answer_id(answer_id, profile_id)
             islike = 1
         elif islike == 1:
-            vote = VoteAnswer.objects.get(answer_id=answer_id, profile_id=profile_id)
+            vote = VoteAnswer.objects.get_vote_answer_by_profile_and_answer_id(answer_id, profile_id)
             vote.delete()
             islike = 0
 
@@ -338,8 +336,6 @@ def correctness(request: HttpRequest):
         iscorrectness = int(request.POST['iscorrectness'])
 
         some_answer = Answer.objects.get_answer_by_id(answer_id)
-
-        profile_id = request.user.profile.id
         
         if iscorrectness == 0:
             some_answer.correctness = True

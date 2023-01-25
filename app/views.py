@@ -284,8 +284,8 @@ def like_question(request: HttpRequest):
         print("HELL")
         return JsonResponse({'status': 'not_auth'})
     try:
-        question_id = int(request.POST.get('question_id', -1))
-        islike = int(request.POST.get('islike', 0))
+        question_id = int(request.POST['question_id'])
+        islike = int(request.POST['islike'])
 
         print("HELL")
         some_question = Question.objects.get_question_by_id(question_id)
@@ -310,8 +310,8 @@ def like_answer(request: HttpRequest):
     if not request.user.is_authenticated:
         return JsonResponse({'status': 'not_auth'})
     try:
-        answer_id = int(request.POST.get('answer_id', -1))
-        islike = int(request.POST.get('islike', 0))
+        answer_id = int(request.POST['answer_id'])
+        islike = int(request.POST['islike'])
 
         some_answer = Answer.objects.get_answer_by_id(answer_id)
 
@@ -321,11 +321,35 @@ def like_answer(request: HttpRequest):
             VoteAnswer.objects.create(answer_id=answer_id, profile_id=profile_id)
             islike = 1
         elif islike == 1:
-            print("HELL")
             vote = VoteAnswer.objects.get(answer_id=answer_id, profile_id=profile_id)
             vote.delete()
             islike = 0
 
         return JsonResponse({'status': 'ok', 'islike': islike, 'likes_count': some_answer.get_likes_count()})
+    except:
+        return JsonResponse({'status': 'error'})
+
+@require_http_methods(["POST"])
+def correctness(request: HttpRequest):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status': 'not_auth'})
+    try:
+        answer_id = int(request.POST['answer_id'])
+        iscorrectness = int(request.POST['iscorrectness'])
+
+        some_answer = Answer.objects.get_answer_by_id(answer_id)
+
+        profile_id = request.user.profile.id
+        
+        if iscorrectness == 0:
+            some_answer.correctness = True
+            some_answer.save()
+            iscorrectness = 1
+        elif iscorrectness == 1:
+            some_answer.correctness = False
+            some_answer.save()
+            iscorrectness = 0
+
+        return JsonResponse({'status': 'ok', 'iscorrectness': iscorrectness})
     except:
         return JsonResponse({'status': 'error'})

@@ -13,5 +13,6 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('profile/edit/', views.settings, name='settings'),
     path('like_question/', views.like_question, name='like_question'),
-    path('like_answer/', views.like_answer, name='like_answer')
+    path('like_answer/', views.like_answer, name='like_answer'),
+    path('correctness/', views.correctness, name='correctness')
 ]

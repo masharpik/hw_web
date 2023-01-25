@@ -36,9 +36,21 @@
         <div class="form-check form-checkbox">
 
           {% if answer.correctness %}
-          <input class="form-check-input" type="checkbox" value="" id="flex_check_{{ answer.id }}" checked>
+
+            {% if curr_profile and question.profile.id == curr_profile.id %}
+              <input class="form-check-input" type="checkbox" value="" id="flex_check_{{ answer.id }}" data-id="{{ answer.id }}" data-iscorrectness="1" checked>
+            {% else %}
+              <input class="form-check-input" disabled="disabled" type="checkbox" value="" id="flex_check_{{ answer.id }}" data-id="{{ answer.id }}" data-iscorrectness="1" checked>
+            {% endif %}
+
           {% else %}
-          <input class="form-check-input" type="checkbox" value="" id="flex_check_{{ answer.id }}">
+
+            {% if curr_profile and question.profile.id == curr_profile.id %}
+              <input class="form-check-input" type="checkbox" value="" id="flex_check_{{ answer.id }}" data-id="{{ answer.id }}" data-iscorrectness="0">
+            {% else %}
+              <input class="form-check-input" disabled="disabled" type="checkbox" value="" id="flex_check_{{ answer.id }}" data-id="{{ answer.id }}" data-iscorrectness="0">
+            {% endif %}
+
           {% endif %}
 
           <label class="form-check-label with-checkbox" for="flex_check_{{ answer.id }}">

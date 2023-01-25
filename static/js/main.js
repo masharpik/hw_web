@@ -69,3 +69,38 @@ $(".answer_swipe").on('click', function (ev) {
         )
     );
 });
+
+$(".form-check-input").on('click', function (ev) {
+    var this_elem = document.getElementById('flex_check_' + $(this).data('id'));
+
+    const request = new Request(
+        'http://127.0.0.1:8000/correctness/',
+        {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
+            },
+            body: 'answer_id=' + $(this).data('id') + '&iscorrectness=' + this_elem.getAttribute('data-iscorrectness')
+        }
+    )
+
+    fetch(request).then(
+        response_raw => response_raw.json().then(
+            response_json => {
+                if (response_json.status == "ok") {
+                    this_elem.setAttribute("data-iscorrectness", response_json.iscorrectness);
+                    if (response_json.iscorrectness == 1) {
+                        document.getElementById('flex_check_' + $(this).data('id')).checked = true;
+                    } else {
+                        document.getElementById('flex_check_' + $(this).data('id')).checked = false;
+                    }
+                } else if (response_json.status == "not_auth") {
+                    window.location.replace("http://127.0.0.1:8000/login/");
+                } else {
+                    alert('Аn error has occurred');
+                }
+            }
+        )
+    );
+});

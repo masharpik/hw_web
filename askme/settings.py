@@ -129,11 +129,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+# для запуска через gunicorn  askme.wsgi
+STATIC_ROOT = BASE_DIR / 'static/'
 
 MEDIA_URL = '/media/'
-
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'media/'
 
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL='login'
@@ -143,6 +144,7 @@ LOGIN_REDIRECT_URL='login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static"
-]
+# для запуска через python3 manage.py runserver
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static"
+# ]

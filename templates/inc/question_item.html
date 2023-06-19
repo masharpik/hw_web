@@ -1,0 +1,48 @@
+{% load static %}
+
+<div class="question">
+    <div class="row">
+      <div class="col-4">
+        <div class="feedback fl">
+
+          {% if question.id in vote_questions %}
+            <p class="swipe question_swipe dblock" id="p_question_{{ question.id }}" data-id="{{ question.id }}" data-islike="1">
+              <input type="image" class="swipe-up" id="image_question_{{ question.id }}" src="{% static 'img/pressed_like.png' %}" alt=""/>
+            </p>
+
+            <p class="score" id="score_question_{{ question.id }}">{{ question.get_likes_count }}</p>
+          {% else %}
+            <p class="swipe question_swipe dblock" id="p_question_{{ question.id }}" data-id="{{ question.id }}" data-islike="0">
+              <input type="image" class="swipe-up" id="image_question_{{ question.id }}" src="{% static 'img/unpressed_like.png' %}" alt=""/>
+            </p>
+
+            <p class="score" id="score_question_{{ question.id }}">{{ question.get_likes_count }}</p>
+          {% endif %}
+  
+        </div>
+        <div class="avatar fl">
+          {% if question.profile.avatar %}
+            <img src="{{ question.profile.avatar.url }}" alt=""/>
+          {% else %}
+            <img src="{% static 'img/default_avatar.jpeg' %}" alt=""/>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-8">
+        <h2 class="question-title"><a href="{% url 'question' question_id=question.id %}">{{ question.title }}</a></h2>
+  
+        <div class="item-text">
+          {{ question.text }}
+        </div>
+  
+        <a class="count-answers" href="{% url 'question' question_id=question.id %}">answers ({{ question.get_count_answers }})</a>
+        <span>Tags: </span>
+        <div class="question-tags dinline">
+          {% for tag in question.get_tags %}
+            <a class="question-tag" href="{% url 'tag' tag_name=tag.name %}">{{ tag.name }}</a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  

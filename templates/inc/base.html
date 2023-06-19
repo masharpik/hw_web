@@ -1,0 +1,139 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sticky Footer Navbar Template · Bootstrap v5.2</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+
+    <link href="{% static 'css/base_style.css' %}" rel="stylesheet">
+
+    {% block links %}
+    {% endblock %}
+
+  </head>
+  <body>
+
+<header>
+  <nav class="hcenter">
+    <div class="logo">
+      <a href="{% url 'index' %}"><img class="img" src="{% static 'img/logo.png' %}" alt=""></a>
+    </div>
+
+    <div class="search">
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+
+    <div class="ui-zone rblock hcenter">
+      <div class="create">
+        <a href="{%  url 'ask' %}">
+          <button class="btn btn-outline-success">ASK!</button>
+        </a>
+      </div>
+
+      <div class="user-data">
+
+        {% if curr_user.is_authenticated %}
+          <div class="avatar fl">
+            {% if curr_profile.avatar %}
+              <img src="{{ curr_profile.avatar.url }}" alt=""/>
+            {% else %}
+              <img src="{% static 'img/default_avatar.jpeg' %}" alt=""/>
+            {% endif %}
+          </div>
+
+          <div class="fl">
+            <p class="username">{{curr_user.username}}</p>
+            <div class="authorization">
+              <a class="r" href="{% url 'settings' %}">settings</a>
+              <a class="l" href="{% url 'logout' %}?next={{ request.get_full_path }}">log out</a>
+            </div>
+          </div>
+        {% else %}
+          <div class="avatar fl">
+            <img src="{% static 'img/default_avatar.jpeg' %}" alt=""/>
+          </div>
+
+          <div class="fl">
+            <p class="username">INCOGNITO</p>
+            <div class="authorization">
+              {% if curr_url == 'signup' %}
+                <a class="r" href="#">sign up</a>
+              {% else %}
+                <a class="r" href="{% url 'signup' %}">sign up</a>
+              {% endif %}
+
+              {% if curr_url == 'login' %}
+                <a class="l" href="#">log in</a>
+              {% else %}
+
+                {% if curr_url == 'signup' %}
+                  <a class="l" href="{% url 'login' %}">log in</a>
+                {% else %}
+                  <a class="l" href="{% url 'login' %}?next={{ request.get_full_path }}">log in</a>
+                {% endif %}
+
+              {% endif %}
+              </div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    </div>
+  </nav>
+
+</header>
+
+<main class="flex-shrink-0">
+
+  <div class="container">
+    <div class="row">
+
+      <div class="col-8">
+        
+        {% block content %}
+        {% endblock %}
+
+      </div>
+
+      <div class="col-4">
+        <div class="popular-zone">
+          <div class="tags">
+            <h2>Popular Tags</h2>
+            {% for some_tag in tags %}
+              <a class="tag" id="tag-{{forloop.counter}}" href="{% url 'tag' tag_name=some_tag.name %}">{{some_tag.name}}</a>
+            {% endfor %}
+          </div>
+
+          <div class="members">
+            <h2>Best Members</h2>
+            {% for some_member in members %}
+              <a class="member" id="member-{{forloop.counter}}" href="#">{{some_member.user.username}}</a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="bg-light">
+  <div class="container">
+    <span class="text-muted">Place sticky footer content here.</span>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="{% static 'js/main.js' %}"></script>
+<script>
+  var csrftoken = '{{ csrf_token }}';
+</script>
+  </body>
+</html>

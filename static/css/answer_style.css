@@ -1,0 +1,36 @@
+.answer {
+    border: 2px solid gray;
+    padding: 20px;
+    border-radius: 6px;
+    min-height: 168px;
+    margin: auto 20px 20px 5px;
+}
+
+#new_answer {
+    margin: 20px 20px 10px 5px;
+    min-height: 150px;
+    min-width: 100%;
+    padding: 5px;
+}
+
+.disable {
+    pointer-events:none;
+}
+
+.item-text {
+    position: relative;
+    width: 90%;
+    word-wrap: break-word;
+    padding: 5px
+}
+
+a.count-answers {
+    pointer-events: none;
+    cursor: default;
+    color: #999;
+}
+
+.question-title > a {
+    pointer-events: none;
+    cursor: default;
+}

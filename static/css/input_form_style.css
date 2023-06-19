@@ -1,0 +1,16 @@
+.dinline {
+    display: inline;
+}
+
+.dflex {
+    display: flex;
+    align-items: center;
+}
+
+.mbottom {
+    margin-bottom: 10px;
+}
+
+.mleft {
+    margin-left: 7px;
+}

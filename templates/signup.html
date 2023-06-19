@@ -1,0 +1,24 @@
+{% extends "inc/base.html" %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block links %}
+
+<link href="{% static 'css/input_form_style.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="dflex mbottom">
+  <h1 class="dinline">Sign up</h1>
+  <a class="mleft" href="{% url 'login' %}">Login</a>
+</div>
+
+<form novalidate class="form" id="form_signup" action="/signup/" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+  <button class="btn btn-outline-success">Register!</button>
+</form>
+
+{% endblock %}

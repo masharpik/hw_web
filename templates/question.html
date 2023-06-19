@@ -1,0 +1,33 @@
+{% extends "inc/base.html" %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block links %}
+
+<link href="{% static 'css/question_style.css' %}" rel="stylesheet">
+<link href="{% static 'css/answer_style.css' %}" rel="stylesheet">
+<link href="{% static 'css/input_form_style.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+
+{% include 'inc/question_item.html' %}
+
+
+{% for answer in answers %}
+  {% include 'inc/answer_item.html' %}
+{% endfor %}
+
+
+{% include 'inc/paginator.html' %}
+
+<div class="bborder"></div>
+
+<form novalidate class="enter-answer" action="{% url 'question' question_id=id %}?page={{input_page}}" method="post">
+  {% csrf_token %}
+  {% bootstrap_form answer_form %}
+  <button class="dblock mleft mbottom btn btn-success">Answer</button>
+</form>
+
+{% endblock %}

@@ -1,0 +1,172 @@
+main > .container {
+    padding-top: 60px;
+}
+
+.avatar {
+    border-radius: 40%;
+    overflow: hidden;
+}
+
+.hcenter {
+    display: flex;
+    align-items: center;
+}
+
+.btn-success {
+    background-color: orange;
+}
+
+nav {
+    height: auto;
+    width: 100%;
+    background-color: #1E1112;
+}
+
+html {
+    height: 100%;
+}
+body {
+    position: relative;
+    margin: 0;
+    min-height: 100%;
+}
+main {
+    padding-bottom: 40px;
+}
+footer {
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    width: 100%;
+}
+footer > .container {
+    padding-top: 10px;
+}
+
+.logo {
+    margin: 15px 15px 15px 15px;
+}
+
+nav .avatar, .logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 40%;
+    overflow: hidden;
+}
+
+.rblock {
+    position: absolute;
+    right: 0px;
+}
+
+.fl {
+    margin: auto 5px;
+    float: left;
+}
+.fr {
+    margin: auto 15px;
+    float: right;
+}
+.ui-zone {
+    margin: auto 40px;
+}
+
+.avatar img, .logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#tag-1 {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 1.2em;
+    color: black;
+}
+#tag-2 {
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 2em;
+    color:firebrick;
+}
+#tag-3 {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 1.2em;
+    color: black;
+}
+#tag-4 {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-size: 1.3em;
+    color: black;
+}
+#tag-5 {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 2em;
+    color: red;
+}
+#tag-6 {
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 1.2em;
+    color: green;
+}
+#tag-7 {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-size: 1.2em;
+    color: black;
+}
+#tag-8 {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.5em;
+    color:darkorange;
+}
+.tag {
+    margin: 7px;
+    text-decoration: none;
+}
+
+.popular-zone {
+    margin: 20px 40px 30px;
+}
+
+.user-data .username {
+    color:antiquewhite;
+    margin-bottom: 0;
+}
+.user-data {
+    display: flex;
+}
+.authorization > a.l {
+    margin: auto 5px;
+}
+
+.username {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 1.1em;
+}
+
+.user-data {
+    margin: auto 20px;
+}
+.create {
+    margin: auto auto;
+}
+
+.tags {
+    margin-bottom: 45px;
+}
+
+.member {
+    font-size: large;
+    display: block;
+}
+
+.dflex {
+    display: flex;
+    align-items: center;
+}
+
+.mleft {
+    margin-left: 7px;
+}
+
+.mbottom {
+    margin-bottom: 10px;
+}

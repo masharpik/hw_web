@@ -1,0 +1,6 @@
+database = marianabdb
+host = localhost
+user = marianab
+password = mariaNab2004!
+default-character-set = utf8
+port = 3306

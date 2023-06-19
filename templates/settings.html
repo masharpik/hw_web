@@ -1,0 +1,22 @@
+{% extends "inc/base.html" %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block links %}
+
+<link href="{% static 'css/settings_style.css' %}" rel="stylesheet">
+<link href="{% static 'css/input_form_style.css' %}" rel="stylesheet">
+
+{% endblock %}
+
+{% block content %}
+
+<h1>Settings</h1>
+
+<form novalidate class="form" id="form_settings" action="/profile/edit/" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% bootstrap_form form %}    
+  <button class="btn btn-outline-success">Save</button>
+</form>
+
+{% endblock %}
